@@ -126,10 +126,47 @@
   (for
     [a (range 1 100)
      b (range 100 10000)
-     :let [c (* a b)]
+     :let [c (* a b)
+           abc (str a b c)]
      :when (and
+             (= (count abc) 9)
              (not-any? #(= \0 %) (str a b c))
-             (= (count (str c)) 4)
-             (= (count (reduce conj #{} (str a b))) 5)
+             ;(= (count (str c)) 4)
+             ;(= (count (reduce conj #{} (str a b))) 5)
              (= (count (reduce conj #{} (str a b c))) 9))]
     c)) ; 56370 <-- wrong
+
+(reduce +
+  (for
+    [a (range 1 1000)
+     b (range 1 10000)
+     :let [c (* a b)
+           abc (str a b c)]
+     :when (and
+             (not-any? #(= \0 %) abc)
+             (= (count abc) 9)
+             (= (count (reduce conj #{} abc)) 9))]
+    c)) ; 97936
+
+(reduce +
+  (reduce conj #{}
+    (for
+      [a (range 1 1000)
+       b (range 1 10000)
+       :let [c (* a b)
+             abc (str a b c)]
+       :when (and
+               (not-any? #(= \0 %) abc)
+               (= (count abc) 9)
+               (= (count (reduce conj #{} abc)) 9))]
+      c))) ; 45228 <-- try!
+
+(count
+  (for
+    [a (range 1 1000)
+     b (range 1 10000)
+     :let [ab (str a b)]
+     :when (and
+             (not-any? #(= \0 %) ab)
+             (= (count (reduce conj #{} ab)) (count ab)))]
+    [a b]))
