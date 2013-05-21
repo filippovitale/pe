@@ -160,13 +160,3 @@
                (= (count abc) 9)
                (= (count (reduce conj #{} abc)) 9))]
       c))) ; 45228 <-- try!
-
-(count
-  (for
-    [a (range 1 1000)
-     b (range 1 10000)
-     :let [ab (str a b)]
-     :when (and
-             (not-any? #(= \0 %) ab)
-             (= (count (reduce conj #{} ab)) (count ab)))]
-    [a b]))
