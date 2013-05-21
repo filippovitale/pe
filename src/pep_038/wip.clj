@@ -67,16 +67,66 @@
   (map #(Character/getNumericValue %) (apply str (map #(str (* 192 %)) (range 1 5))))) ; 9
 
 (defn calculate-pandigital [n]
-  (reduce
-    (fn [a v]
-      (if-not (or (a v) (= 0 v))
-        (conj a v)
-        (reduced (count a))))
-      #{}
-    (map #(Character/getNumericValue %) (apply str (map #(str (* n %)) (range 1 5))))))
+  (count
+    (reduce
+      (fn [a v]
+        (if-not (or (a v) (= 0 v))
+          (conj a v)
+          (reduced a)))
+        #{}
+      (map #(Character/getNumericValue %) (apply str (map #(str (* n %)) (range 1 5)))))))
 
 
 (map #(calculate-pandigital %) (range 10))
 ;(0 #{1 2 3 4} #{2 4 6 8} #{1 2 3 6 9} 4 2 3 4 6 #{1 2 3 6 7 8 9})
 
 (apply max (map #(calculate-pandigital %) (range 10)))
+
+(map #(calculate-pandigital %) (range 10)) ; (0 4 4 5 4 2 3 4 6 7)
+(apply max (map #(calculate-pandigital %) (range 10))) ; 7
+(apply max (map #(calculate-pandigital %) (range 1e3))) ; 9
+(apply max (map #(calculate-pandigital %) (range 1e3 1e4))) ; 5
+(apply max (map #(calculate-pandigital %) (range 1e4 1e5))) ; 6
+(apply max (map #(calculate-pandigital %) (range 1e5 1e6))) ; 7
+(apply max (map #(calculate-pandigital %) (range 1e6 1e7))) ; 8
+
+(reduce max
+  (for [n (range 1e3)
+        :let [p (calculate-pandigital n)]
+        :when (= p 9)]
+    p))
+
+(defn calculate-pandigital [n]
+  (count
+    (reduce
+      (fn [a v]
+        (if-not (or (a v) (= 0 v))
+          (conj a v)
+          (reduced a)))
+        #{}
+      (map #(Character/getNumericValue %) (apply str (map #(str (* n %)) (range 1 5)))))))
+
+(str 123 321) ; "123321"
+(str "123" 321) ; "123321"
+(str "" 123) ;"123"
+
+(defn pandigital? [s]
+  (= (count (set (filter #(not= \0 %) s))) (count s))) ;)
+
+(defn calculate-pandigital [n]
+  (reduce
+    (fn [a v]
+      (let [p (str a v)]
+        (if (pandigital? p) ; try 1-9-pandigital?
+          p
+          (reduced a))))
+    ""
+    (map #(* n %) (range 1 10))))
+
+(calculate-pandigital 192) ; "192384576"
+
+(reduce max
+  (for [i (range 1e5)
+        :let [p (calculate-pandigital i)]
+        :when (= (count p) 9)]
+    (Integer/parseInt p)))
