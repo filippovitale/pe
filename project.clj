@@ -12,4 +12,4 @@
                               :profiles [:clj1.5.1 ]
                               :namespaces [benchmarks.pep-xxx]}]}
   ;:jvm-opts ["-Xmx4g" "-Xincgc" "-XX:+UseConcMarkSweepGC" "-XX:+DisableExplicitGC"]
-  :main pep-032.solution1)
+  :main pep-067.solution)
