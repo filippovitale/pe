@@ -7,12 +7,17 @@
 (defn sin [n] (Math/sin n))
 (defn acos [n] (Math/acos n))
 
+; http://www.wolframalpha.com/input/?i=internal+angles+3+4+5+triangle
+; http://www.wolframalpha.com/input/?i=cos%5E-1%284%2F5%29
+
 (acos (/ 4 5)) ; radians 0.6435011087932843
 (acos (/ 3 5)) ; radians 0.9272952180016123
 
 (* (acos (/ 4 5)) (/ 180 pi)) ; degrees 36.86989764584401
 (* (acos (/ 3 5)) (/ 180 pi)) ; degrees 53.13010235415599
 
+
+;;; Heavily Inspired by https://github.com/johnlawrenceaspden/hobby-code/blob/master/fractaltree-stuart-halloway.clj
 
 (import javax.swing.JFrame)
 (import javax.swing.JPanel)
@@ -65,7 +70,7 @@
   (proxy [JPanel] []
     (paintComponent [g]
       (proxy-super paintComponent g)
-      ;(System/gc)
+      (System/gc)
       (time (render g (. this getWidth) (. this getHeight))))))
 
 (doto
@@ -74,6 +79,57 @@
   (.setSize 640 400)
   (.setVisible true))
 
-;;;
+; http://mathworld.wolfram.com/RotationMatrix.html
+; | cos(@) -sin(@) |
+; | sin(@)  cos(@) |
+
+
+;;; http://www.html5rocks.com/en/tutorials/webgl/webgl_transforms/#toc-matrices
+; |  c -s |
+; |  s  c |
+
+;  i = 0
+; | 1 0 |
+; | 0 1 |
+
+; (double (/ 4 5)) ; 0.8
+; (double (/ 3 5)) ; 0.6
+
+;   left rotation
+; |  0.8 -0.6 |
+; |  0.6  0.8 |
+
+;   left scale
+; |  0.8  0   |
+; |  0    0.8 |
+
+;   left translate --> try
+
+;   right rotation
+; |  0.6  0.8 |
+; | -0.8  0.6 |
+
+;   right scale
+; |  0.6  0   |
+; |  0    0.6 |
+
+;   right translate --> try
+
+(reduce matrix-mul [state, left_translate, left_rotate, left_scale])
+(reduce matrix-mul [state, right_translate, right_rotate, right_scale])
+
+; Mathematica
+; http://reference.wolfram.com/legacy/v5/Built-inFunctions/AdvancedDocumentation/LinearAlgebra/2.7.html
+
+;left_rotation = MatrixForm[{{0.8,-0.6,0},{0.6,0.8,0},{0,0,1}}]
+;left_scale = MatrixForm[{{0.8,0,0},{0,0.8,0},{0,0,1}}]
+; {{0.8,-0.6,0},{0.6,0.8,0},{0,0,1}}.{{0.8,0,0},{0,0.8,0},{0,0,1}}
+; IdentityMatrix[3].{{0.8, -0.6, 0}, {0.6, 0.8, 0}, {0, 0, 1}}.{{0.8, 0, 0}, {0, 0.8,0}, {0, 0, 1}}
+
+;ListPlot[{{0., 1.}, {0.64, 1.48}, {-0.48, 1.64}, {0.16,2.12}}, AspectRatio -> 1, DataRange -> {0, 3},AxesOrigin -> {0, 0}]
+
+
 
 ; TODO Graphics2D g2 = (Graphics2D) g; g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+
+; TODO WebGL center+radius http://dl.dropboxusercontent.com/u/17612367/OpenGL%20to%20WebGL/exercise%202.3.5%20-%20flurry%20diamond/index.html
