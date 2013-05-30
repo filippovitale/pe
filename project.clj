@@ -4,6 +4,7 @@
   :license {:name "The MIT License (MIT)"
             :url "http://opensource.org/licenses/mit-license.php"}
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [quil "1.6.0"]
                  [org.clojure/math.combinatorics "0.0.4"]
                  [perforate "0.2.4"]]
   :plugins [[perforate "0.2.4"]]
@@ -12,4 +13,4 @@
                               :profiles [:clj1.5.1 ]
                               :namespaces [benchmarks.pep-xxx]}]}
   ;:jvm-opts ["-Xmx4g" "-Xincgc" "-XX:+UseConcMarkSweepGC" "-XX:+DisableExplicitGC"]
-  :main pep-067.solution)
+  :main pep-395.quil)
