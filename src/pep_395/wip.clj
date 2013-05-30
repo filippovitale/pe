@@ -129,6 +129,9 @@
 ;ListPlot[{{0., 1.}, {0.64, 1.48}, {-0.48, 1.64}, {0.16,2.12}}, AspectRatio -> 1, DataRange -> {0, 3},AxesOrigin -> {0, 0}]
 
 
+; TODO try http://www.cs.ucr.edu/~vbz/cs130w11-07.pdf
+
+; TODO try arraylist http://natureofcode.com/book/chapter-8-fractals/
 
 ; TODO Graphics2D g2 = (Graphics2D) g; g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
