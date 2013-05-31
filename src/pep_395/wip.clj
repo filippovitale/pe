@@ -130,9 +130,56 @@
 
 
 ; TODO try http://www.cs.ucr.edu/~vbz/cs130w11-07.pdf
-
 ; TODO try arraylist http://natureofcode.com/book/chapter-8-fractals/
-
 ; TODO Graphics2D g2 = (Graphics2D) g; g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-
 ; TODO WebGL center+radius http://dl.dropboxusercontent.com/u/17612367/OpenGL%20to%20WebGL/exercise%202.3.5%20-%20flurry%20diamond/index.html
+
+(import
+  (javax.swing JFrame JPanel)
+  (java.awt Graphics2D RenderingHints Color Polygon)
+  ;(java.awt.image BufferedImage)
+  )
+
+;(str 1 2) ;"12"
+;(str [1 2]) ; "[1 2]"
+;(apply str [1 2]) ;"12"
+
+(defn xy12->polygon [x1 y1 x2 y2]
+  (Polygon.
+    (int-array [x1 x1 x2 x2])
+    (int-array [y1 y2 y2 y1]) 4))
+
+(defn draw-branch [#^Graphics2D g x1 y1 x2 y2 depth]
+  (. g setStroke (java.awt.BasicStroke. 2))
+  (. g setColor (Color. 203 75 22)) ; http://ethanschoonover.com/solarized
+  ;(. g drawRect x1 y1 (- x2 x1) (- y2 y1)))
+  ;(. g drawRect 20 20 70 70))
+  ;(. g draw (Rectangle. 20 20 70 170)))
+  ;(. g fill (Polygon.
+  ;            (int-array [20 20 90 70])
+  ;            (int-array [20 70 90 20]) 4)))
+  (. g fill (xy12->polygon 20 20 70 70)))
+
+(defn render [#^Graphics2D g w h]
+  (doto g
+    (.setColor (Color. 0 43 54))
+    (.fillRect 0 0 w h)
+    (.setRenderingHints {RenderingHints/KEY_ANTIALIASING RenderingHints/VALUE_ANTIALIAS_ON}))
+  ; RenderingHints.KEY_TEXT_ANTIALIASING RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB
+  ;(draw-branch g (/ w 2) h 0 1))
+  (draw-branch g 20 20 90 90 1))
+
+(defn panel []
+  "Create a panel with a customised render"
+  (proxy [JPanel] []
+    (paintComponent [g]
+      (proxy-super paintComponent g)
+      (System/gc)
+      (time (render g (. this getWidth) (. this getHeight))))))
+
+(doto
+  (JFrame. "pep-395")
+  (.add (panel))
+  (.setSize 640 400)
+  (.setVisible true))
+
