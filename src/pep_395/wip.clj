@@ -128,12 +128,6 @@
 
 ;ListPlot[{{0., 1.}, {0.64, 1.48}, {-0.48, 1.64}, {0.16,2.12}}, AspectRatio -> 1, DataRange -> {0, 3},AxesOrigin -> {0, 0}]
 
-
-; TODO try http://www.cs.ucr.edu/~vbz/cs130w11-07.pdf
-; TODO try arraylist http://natureofcode.com/book/chapter-8-fractals/
-; TODO Graphics2D g2 = (Graphics2D) g; g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-; TODO WebGL center+radius http://dl.dropboxusercontent.com/u/17612367/OpenGL%20to%20WebGL/exercise%202.3.5%20-%20flurry%20diamond/index.html
-
 (import
   (javax.swing JFrame JPanel)
   (java.awt Graphics2D RenderingHints Color Polygon)
@@ -144,14 +138,28 @@
 ;(str [1 2]) ; "[1 2]"
 ;(apply str [1 2]) ;"12"
 
+
+(defn xy12->midpoint [x1 y1 x2 y2]
+  [(/ (+ x1 x2) 2) (/ (+ y1 y2) 2)])
+
 (defn xy12->polygon [x1 y1 x2 y2]
   (Polygon.
     (int-array [x1 x1 x2 x2])
     (int-array [y1 y2 y2 y1]) 4))
 
+;def Point(x,y,matrix=None):
+;  matrix = matrix or Matrix()
+;  transform = matrix.mult(Matrix(tx=x, ty=y))
+;  x = transform.tx
+;  y = transform.ty
+;  return _Point(x,y)
+
+(def color-orange (Color. 203 75 22))
+(def color-dark (Color. 0 43 54))
+
 (defn draw-branch [#^Graphics2D g x1 y1 x2 y2 depth]
   (. g setStroke (java.awt.BasicStroke. 2))
-  (. g setColor (Color. 203 75 22)) ; http://ethanschoonover.com/solarized
+  (. g setColor color-orange) ; http://ethanschoonover.com/solarized
   ;(. g drawRect x1 y1 (- x2 x1) (- y2 y1)))
   ;(. g drawRect 20 20 70 70))
   ;(. g draw (Rectangle. 20 20 70 170)))
@@ -162,7 +170,7 @@
 
 (defn render [#^Graphics2D g w h]
   (doto g
-    (.setColor (Color. 0 43 54))
+    (.setColor color-dark)
     (.fillRect 0 0 w h)
     (.setRenderingHints {RenderingHints/KEY_ANTIALIASING RenderingHints/VALUE_ANTIALIAS_ON}))
   ; RenderingHints.KEY_TEXT_ANTIALIASING RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB
@@ -183,3 +191,97 @@
   (.setSize 640 400)
   (.setVisible true))
 
+; instead of modeling the square as x1y1x2y2
+; http://en.wikipedia.org/wiki/Matrix_(mathematics)#Linear_transformations
+
+(use 'clojure.core.matrix)
+(use '[clojure.core.matrix.operators :exclude [* - + == /]])
+
+(def left-rotation
+  [[0.8 -0.6 0]
+   [0.6 0.8 0]
+   [0 0 1]])
+
+(pm (* (identity-matrix 3) left-rotation))
+;[[0.800 -0.6000.000]
+; [0.600  0.8000.000]
+; [0.000  0.0001.000]]
+;nil
+
+(def left-scale
+  [[0.8 0 0]
+   [0 0.8 0]
+   [0 0 1]])
+
+(pm (* (identity-matrix 3) left-scale))
+;[[0.800 0.0000.000]
+; [0.000 0.8000.000]
+; [0.000 0.0001.000]]
+;nil
+
+(def left-translate
+  [[1 0 0]
+   [0 1 1]
+   [0 0 1]])
+
+(def unit-square
+  [[0 1 0 1]
+   [0 0 1 1]
+   [1 1 1 1]])
+
+(pm (* left-scale unit-square))
+(pm (* left-rotation left-scale unit-square))
+(pm (* left-translate left-rotation left-scale unit-square))
+
+(def l (* left-rotation left-scale left-translate unit-square))
+(pm l)
+;[[-0.480 0.160-0.960-0.320]
+; [ 0.640 1.120 1.280 1.760]
+; [ 1.000 1.000 1.000 1.000]]
+
+(get-row l 0) ;[-0.48 0.16000000000000014 -0.96 -0.31999999999999984]
+(get-row l 1) ; [0.6400000000000001 1.12 1.2800000000000002 1.7600000000000002]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(import
+  (javax.swing JFrame JPanel)
+  (java.awt Graphics2D RenderingHints Color Polygon))
+
+(def color-orange (Color. 203 75 22))
+(def color-dark (Color. 0 43 54))
+
+(defn state->polygon [_]
+  (Polygon.
+    (int-array (map #(* 10 %) (get-row l 0)))
+    (int-array (map #(* 10 %) (get-row l 1)))
+    4))
+
+(defn draw-branch [#^Graphics2D g x1 y1 x2 y2 depth]
+  (. g setStroke (java.awt.BasicStroke. 2))
+  (. g setColor color-orange)
+  ;  (. g fill (state->polygon l)))
+  (. g fill (state->polygon nil)))
+
+(defn render [#^Graphics2D g w h]
+  (doto g
+    (.setColor color-dark)
+    (.fillRect 0 0 w h)
+    (.setRenderingHints {RenderingHints/KEY_ANTIALIASING RenderingHints/VALUE_ANTIALIAS_ON}))
+  ; RenderingHints.KEY_TEXT_ANTIALIASING RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB
+  ;(draw-branch g (/ w 2) h 0 1))
+  (draw-branch g 20 20 90 90 1))
+
+(defn panel []
+  "Create a panel with a customised render"
+  (proxy [JPanel] []
+    (paintComponent [g]
+      (proxy-super paintComponent g)
+      (System/gc)
+      (time (render g (. this getWidth) (. this getHeight))))))
+
+(doto
+  (JFrame. "pep-395")
+  (.add (panel))
+  (.setSize 640 400)
+  (.setVisible true))

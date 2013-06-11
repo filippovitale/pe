@@ -4,6 +4,7 @@
   :license {:name "The MIT License (MIT)"
             :url "http://opensource.org/licenses/mit-license.php"}
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [net.mikera/core.matrix "0.7.2"]
                  [quil "1.6.0"]
                  [org.clojure/math.combinatorics "0.0.4"]
                  [perforate "0.2.4"]]
