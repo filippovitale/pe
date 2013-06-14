@@ -13,5 +13,6 @@
   i)
 ; (1 3 7 9 11 13 17 19 21 23 27 29)
 
-(take 10 (reverse (filter probable-prime? (range 1e3)))) ; (997 991 983 977 971 967 953 947 941 937)
+(take 10 (reverse (filter probable-prime? (range 1e3))))
+; (997 991 983 977 971 967 953 947 941 937)
 ; the solution *could* be one of these
