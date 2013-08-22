@@ -23,9 +23,7 @@
       (first ab-set)
       (recur
         (inc n)
-        (filter
-          (fn [[a b]]
-            (prime? (quad-prime a b n))) ab-set)))))
+        (filter (fn [[a b]] (prime? (quad-prime a b n))) ab-set)))))
 
 (defn solve [n]
   (let [[a b] (find-ab-max (ab-candidate n))]
