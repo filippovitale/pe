@@ -15,4 +15,4 @@
                               :profiles [:clj1.5.1 ]
                               :namespaces [benchmarks.pep-xxx]}]}
   ;:jvm-opts ["-Xmx4g" "-Xincgc" "-XX:+UseConcMarkSweepGC" "-XX:+DisableExplicitGC"]
-  :main pep-395.quil)
+  :main pep-041.wip)
