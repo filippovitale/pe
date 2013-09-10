@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [net.mikera/core.matrix "0.7.2"]
                  [quil "1.6.0"]
+                 [org.clojure/data.priority-map "0.0.2"]
                  [org.clojure/math.combinatorics "0.0.4"]
                  [org.clojure/math.numeric-tower "0.0.2"]
                  [perforate "0.2.4"]]
