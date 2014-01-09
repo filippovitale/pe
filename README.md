@@ -5,6 +5,7 @@ I would like to publish some solutions and libraries I made while solving some i
 
 #### Languages used
  * Clojure / ClojureScript
+ * Scala
  * C#
  * CUDA (C++)
  * Go
