@@ -1,7 +1,5 @@
-Pr*j*ct E*l*r
-==
-
-I would like to publish some solutions and libraries I made while solving some interesting problems.
+I would like to publish some solutions and libraries I made while solving some interesting problems like:
+* http://projecteuler.net/show=all
 
 #### Languages used
  * Clojure / ClojureScript
