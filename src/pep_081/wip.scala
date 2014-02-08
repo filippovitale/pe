@@ -1,17 +1,26 @@
 package pep_081
 
 object wip {
-  def main(args: Array[String] = Array("src/pep_081/matrix.txt")) {
-    val solution = solve(args.head)
-    println(solution)
+
+  val filename = "src/pep_081/matrix.txt"
+  val input = io.Source.fromFile(filename)
+    .mkString.trim.split("\n")
+    .map(_.split(",") map (_.toInt))
+  // TODO -1 ?
+  val lastRow = input.size
+  val lastCol = input.head.size
+
+  case class Cell(row: Int, col: Int)
+
+  def nextCells(actualCell: Cell): Seq[Cell] = {
+    Nil
   }
 
-  def solve(filename: String): Int = {
-    val matrix = io.Source.fromFile(filename)
-      .mkString.trim.split("\n")
-      .map(_.split(",") map (_.toInt))
+  def solve(): Int = {
+    -1
+  }
 
-
-    matrix.last.last // TODO
+  def main(args: Array[String] = Array()) {
+    println(solve())
   }
 }
