@@ -14,13 +14,17 @@ object wip {
     def isLastRow: Boolean = row == lastRow
 
     def isLastCol: Boolean = col == lastCol
+
+    def moveRight: Cell = Cell(row, col + 1)
+
+    def moveDown: Cell = Cell(row + 1, col)
   }
 
   def nextCells(actualCell: Cell): Seq[Cell] = actualCell match {
     case cell if cell.isLastRow && cell.isLastCol => Nil
-    case cell if cell.isLastCol => Seq(Cell(cell.row + 1, cell.col))
-    case cell if cell.isLastRow => Seq(Cell(cell.row, cell.col + 1))
-    case cell => Seq(Cell(cell.row + 1, cell.col), Cell(cell.row, cell.col + 1))
+    case cell if cell.isLastCol => Seq(cell.moveDown)
+    case cell if cell.isLastRow => Seq(cell.moveRight)
+    case cell => Seq(cell.moveDown, cell.moveRight)
   }
 
   def solve(): Int = {
