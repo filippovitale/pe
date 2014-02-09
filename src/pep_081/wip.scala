@@ -27,8 +27,24 @@ object wip {
     case cell => Seq(cell.moveDown, cell.moveRight)
   }
 
-  def solve(): Int = {
-    -1
+  def minPath(cell: Cell): Int = {
+    val nc = nextCells(cell)
+
+    val aaa = nc match {
+      case Nil => 0
+      case cs => cs.map(minPath).min
+      // case c :: Nil => minPath(c)
+      // case c1 :: c2 :: Nil => Seq(minPath(c1), minPath(c2)).min
+    }
+
+    // import scalaz._, Scalaz._
+    // (c1 |@| c2)(math.min) getOrElse 0
+
+    input(cell.row)(cell.col) + aaa
+  }
+
+  def solve(startCell: Cell = Cell(0, 0)): Int = {
+    minPath(startCell)
   }
 
   def main(args: Array[String] = Array()) {
