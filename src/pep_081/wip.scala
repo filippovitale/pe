@@ -27,7 +27,7 @@ object wip {
     case cell => Seq(cell.moveDown, cell.moveRight)
   }
 
-  def mp(f: Cell => Int)(cell: Cell): Int = {
+  def minPath(f: Cell => Int)(cell: Cell): Int = {
     (nextCells(cell) match {
       case Nil => 0
       case cs => cs.map(f).min
@@ -35,7 +35,7 @@ object wip {
   }
 
   def solve(startCell: Cell = Cell(0, 0)): Int = {
-    Memoize1.Y(mp)(startCell)
+    Memoize1.Y(minPath)(startCell)
   }
 
   def main(args: Array[String] = Array()) {
