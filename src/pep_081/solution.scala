@@ -1,6 +1,6 @@
 package pep_081
 
-object wip {
+object solution {
 
   val filename = "src/pep_081/matrix.txt"
   val input = io.Source.fromFile(filename)
@@ -34,9 +34,5 @@ object wip {
 
   def solve(startCell: Cell = Cell(0, 0)): Int = {
     Memoize1.Y(minPath)(startCell)
-  }
-
-  def main(args: Array[String] = Array()) {
-    println(solve())
   }
 }
