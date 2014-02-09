@@ -28,10 +28,8 @@ object wip {
   }
 
   def minPath(f: Cell => Int)(cell: Cell): Int = {
-    (nextCells(cell) match {
-      case Nil => 0
-      case cs => cs.map(f).min
-    }) + input(cell.row)(cell.col)
+    util.Try(nextCells(cell).map(f).min).toOption.
+      getOrElse(0) + input(cell.row)(cell.col)
   }
 
   def solve(startCell: Cell = Cell(0, 0)): Int = {
