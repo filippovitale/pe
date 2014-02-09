@@ -43,8 +43,16 @@ object wip {
     input(cell.row)(cell.col) + aaa
   }
 
+  def mp(f: Cell => Int)(cell: Cell): Int = {
+    (nextCells(cell) match {
+      case Nil => 0
+      case cs => cs.map(mp(f)).min
+    }) + input(cell.row)(cell.col)
+  }
+
   def solve(startCell: Cell = Cell(0, 0)): Int = {
-    minPath(startCell)
+    //    minPath(startCell)
+    Memoize1.Y(mp)(startCell)
   }
 
   def main(args: Array[String] = Array()) {
