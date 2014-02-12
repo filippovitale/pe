@@ -44,24 +44,17 @@ object wip {
   val distance = mutable.Map[Position, Int](Position().Start -> 0)
   val previous = mutable.Map[Position, Position]()
 
-  //  val a = for {
-  //    i <- 0 to 3
-  //    j <- 0 to 3
-  //  } yield (i, j)
-
-  //  val positions: Position =  for {
-  //    row: Int <- 0 to 79
-  //    col: Int <- 0 to 79
-  //  } yield (Position(row, col), Int.MaxValue)
-
-  // (Position(0,0), 0) ++ o + positions.tail
-
   case class PositionsToExplore(priority: Int, position: Position) extends Ordered[PositionsToExplore] {
     def compare(that: PositionsToExplore) = that.priority compare this.priority
   }
 
-  val positionsToExplore = mutable.PriorityQueue[PositionsToExplore]() ++
-    mutable.Seq(PositionsToExplore(Int.MaxValue, Position(0, 0))) // ++ the rest
+  val initPositionsToExplore = for {
+    r <- 0 to lastRow
+    c <- 0 to lastCol
+  } yield PositionsToExplore(Int.MaxValue, Position(r, c))
+
+  val positionsToExplore = mutable.PriorityQueue[PositionsToExplore]() ++ initPositionsToExplore.tail
+  positionsToExplore.enqueue(PositionsToExplore(0, Position(0, 0)))
 
   // positionsToExplore.dequeue()
 
