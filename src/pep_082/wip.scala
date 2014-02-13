@@ -41,28 +41,44 @@ object wip {
     case cell => Seq(cell.moveUp, cell.moveDown, cell.moveRight)
   }
 
-  val distance = mutable.Map[Position, Int](Position().Start -> 0)
+  val distance = mutable.Map[Position, Int](Position().Start -> input(0)(0))
   val previous = mutable.Map[Position, Position]()
 
   case class PositionsToExplore(priority: Int, position: Position) extends Ordered[PositionsToExplore] {
     def compare(that: PositionsToExplore) = that.priority compare this.priority
   }
 
-  val initPositionsToExplore = for {
+  val firstColumn = for {
     r <- 0 to lastRow
-    c <- 0 to lastCol
+  } yield PositionsToExplore(0, Position(r, 0))
+
+  val rest = for {
+    r <- 0 to lastRow
+    c <- 1 to lastCol
   } yield PositionsToExplore(Int.MaxValue, Position(r, c))
 
-  val positionsToExplore = mutable.PriorityQueue[PositionsToExplore]() ++ initPositionsToExplore.tail
-  positionsToExplore.enqueue(PositionsToExplore(0, Position(0, 0)))
+  var positionsToExplore = mutable.PriorityQueue[PositionsToExplore]() ++ firstColumn ++ rest
 
-  // positionsToExplore.dequeue()
+  var a = positionsToExplore.length
 
-  def minPath(f: Position => Int)(cell: Position): Int = {
-    -1
-  }
-
-  def solve(startCell: Position = Position(0, 0)): Int = {
-    -1 // TODO
+  def solve(): Int = {
+    var result: Int = 0
+    while (result == 0 && positionsToExplore.nonEmpty) {
+      val position = positionsToExplore.dequeue().position
+      val neighbors = nextCells(position)
+      neighbors.foreach {
+        case neighbor =>
+          val pathValue = distance.getOrElse(position, Int.MaxValue) + input(neighbor.row)(neighbor.col)
+          if (neighbor.isEndPosition) {
+            result = pathValue
+          } else if (pathValue < distance.getOrElse(neighbor, Int.MaxValue)) {
+            distance.update(neighbor, pathValue)
+            previous.update(neighbor, position)
+            positionsToExplore = positionsToExplore.filterNot(p => p == neighbor) // TODO not very efficient...
+            positionsToExplore.enqueue(PositionsToExplore(pathValue, neighbor))
+          }
+      }
+    }
+    result
   }
 }
