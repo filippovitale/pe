@@ -32,18 +32,19 @@ object solution {
 
     def moveDown: Position = Position(row + 1, col)
 
-    def nextCells: Seq[Position] = Position(row, col) match {
-      case cell if cell.isEndPosition => Nil
-      case cell if cell.isStartPosition => Seq(cell.moveDown, cell.moveRight)
+    def nextPositions: Set[Position] = Position(row, col) match {
+      case cell if cell.isEndPosition => Set()
+      case cell if cell.isStartPosition => Set(cell.moveDown, cell.moveRight)
       case cell =>
-        var ret = Seq(cell.moveUp, cell.moveDown, cell.moveLeft, cell.moveRight)
-        if (cell.isFirstRow) ret = ret.filterNot(_ == cell.moveUp)
-        if (cell.isFirstCol) ret = ret.filterNot(_ == cell.moveLeft)
-        if (cell.isLastRow) ret = ret.filterNot(_ == cell.moveDown)
-        if (cell.isLastCol) ret = ret.filterNot(_ == cell.moveRight)
-        ret
+        val nextPositions = mutable.Set(cell.moveUp, cell.moveDown, cell.moveLeft, cell.moveRight)
+        if (cell.isFirstRow) nextPositions.remove(cell.moveUp)
+        if (cell.isFirstCol) nextPositions.remove(cell.moveLeft)
+        if (cell.isLastRow) nextPositions.remove(cell.moveDown)
+        if (cell.isLastCol) nextPositions.remove(cell.moveRight)
+        nextPositions.toSet
     }
   }
+
 
   val positions = for {
     r <- 0 to lastRow
@@ -54,6 +55,7 @@ object solution {
   val values = mutable.Map[Position, Int]() ++ positions.map(p => p -> input(p.row)(p.col))
   val distance = mutable.Map[Position, Int]() ++ startPositions.map(p => p -> values(p))
 
+
   case class PositionsToExplore(priority: Int, position: Position) extends Ordered[PositionsToExplore] {
     def compare(that: PositionsToExplore) = that.priority compare this.priority
   }
@@ -62,12 +64,13 @@ object solution {
     startPositions.map(PositionsToExplore(0, _)) ++
     otherPositions.map(PositionsToExplore(Int.MaxValue, _))
 
+
   def solve(): Int = {
     var result = Int.MaxValue
 
     while (positionsToExplore.nonEmpty) {
       val position = positionsToExplore.dequeue().position
-      val neighbors = position.nextCells
+      val neighbors = position.nextPositions
       neighbors.foreach {
         case neighbor =>
           // val pathValue = distance.getOrElseUpdate(position, Int.MaxValue) + input(neighbor.row)(neighbor.col)
