@@ -38,29 +38,18 @@ object solution {
     }
   }
 
-  val values = mutable.Map[Position, Int]() ++
-    (for {
-      r <- 0 to lastRow
-      c <- 0 to lastCol
-    } yield Position(r, c) -> input(r)(c))
+  val positions = for {
+    r <- 0 to lastRow
+    c <- 0 to lastCol
+  } yield Position(r, c)
 
-  val distance = mutable.Map[Position, Int]() ++
-    values.filter {
-      case (p, v) => p.isStartPosition
-    }
+  val (startPositions, otherPositions) = positions.partition(_.isStartPosition)
+  val values = mutable.Map[Position, Int]() ++ positions.map(p => p -> input(p.row)(p.col))
+  val distance = mutable.Map[Position, Int]() ++ startPositions.map(p => p -> values(p))
 
   case class PositionsToExplore(priority: Int, position: Position) extends Ordered[PositionsToExplore] {
     def compare(that: PositionsToExplore) = that.priority compare this.priority
   }
-
-  val startPositions = for {
-    r <- 0 to lastRow
-  } yield Position(r, 0)
-
-  val otherPositions = for {
-    r <- 0 to lastRow
-    c <- 1 to lastCol
-  } yield Position(r, c)
 
   var positionsToExplore = mutable.PriorityQueue[PositionsToExplore]() ++
     startPositions.map(PositionsToExplore(0, _)) ++
@@ -68,6 +57,7 @@ object solution {
 
   def solve(): Int = {
     var result: Int = Int.MaxValue
+
     while (positionsToExplore.nonEmpty) {
       val position = positionsToExplore.dequeue().position
       val neighbors = position.nextCells
@@ -75,10 +65,15 @@ object solution {
         case neighbor =>
           // val pathValue = distance.getOrElseUpdate(position, Int.MaxValue) + input(neighbor.row)(neighbor.col)
           val pathValue = if (distance.contains(position)) {
-            distance.get(position).get + input(neighbor.row)(neighbor.col)
+            distance.get(position).get + values(neighbor)
           } else {
             Int.MaxValue
           }
+
+          // refactor tryout
+          // val a: Option[Int] = distance.get(position)
+          // val pv: Int = distance.get(position).getOrElse(Int.MaxValue)
+          // val pvv: Int = if (pv == Int.MaxValue) pv else pv + values(neighbor)
 
           if (neighbor.isEndPosition && pathValue < result) {
             result = pathValue
@@ -86,9 +81,9 @@ object solution {
 
           if (pathValue < distance.getOrElse(neighbor, Int.MaxValue)) {
             distance.update(neighbor, pathValue)
-            // TODO PriorityQueue are O(n) for random access :-/
+            // TODO PriorityQueue has O(n) for random access :-/
             positionsToExplore = positionsToExplore.filterNot(_.position == neighbor)
-            positionsToExplore.enqueue(PositionsToExplore(pathValue, neighbor))
+            positionsToExplore += PositionsToExplore(pathValue, neighbor)
           }
       }
     }
