@@ -38,31 +38,33 @@ object solution {
     }
   }
 
-  val values = mutable.Map[Position, Int]() ++ (for {
-    r <- 0 to lastRow
-    c <- 0 to lastCol
-  } yield Position(r, c) -> input(r)(c))
+  val values = mutable.Map[Position, Int]() ++
+    (for {
+      r <- 0 to lastRow
+      c <- 0 to lastCol
+    } yield Position(r, c) -> input(r)(c))
 
-  val distance: mutable.Map[Position, Int] = mutable.Map[Position, Int]() ++
-    (for {r <- 0 to lastRow} yield Position(r, 0)).map(p => p -> values(p))
-
+  val distance = mutable.Map[Position, Int]() ++
+    values.filter {
+      case (p, v) => p.isStartPosition
+    }
 
   case class PositionsToExplore(priority: Int, position: Position) extends Ordered[PositionsToExplore] {
     def compare(that: PositionsToExplore) = that.priority compare this.priority
   }
 
-  val firstColumn = for {
+  val startPositions = for {
     r <- 0 to lastRow
-  } yield PositionsToExplore(0, Position(r, 0))
+  } yield Position(r, 0)
 
-  val rest = for {
+  val otherPositions = for {
     r <- 0 to lastRow
     c <- 1 to lastCol
-  } yield PositionsToExplore(Int.MaxValue, Position(r, c))
+  } yield Position(r, c)
 
-  var positionsToExplore = mutable.PriorityQueue[PositionsToExplore]() ++ firstColumn ++ rest
-
-  var a = positionsToExplore.length
+  var positionsToExplore = mutable.PriorityQueue[PositionsToExplore]() ++
+    startPositions.map(PositionsToExplore(0, _)) ++
+    otherPositions.map(PositionsToExplore(Int.MaxValue, _))
 
   def solve(): Int = {
     var result: Int = Int.MaxValue
