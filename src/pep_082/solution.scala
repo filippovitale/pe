@@ -9,7 +9,7 @@ object solution {
   val lastRow = input.size - 1
   val lastCol = input.head.size - 1
 
-  case class Position(row: Int = 0, col: Int = 0) {
+  case class Position(row: Int, col: Int) {
     def isFirstRow: Boolean = row == 0
 
     def isFirstCol: Boolean = col == 0
@@ -29,20 +29,23 @@ object solution {
     def moveRight: Position = Position(row, col + 1)
 
     def moveDown: Position = Position(row + 1, col)
+
+    def nextCells: Seq[Position] = Position(row, col) match {
+      case cell if cell.isEndPosition => Nil
+      case cell if cell.isFirstRow => Seq(cell.moveDown, cell.moveRight)
+      case cell if cell.isLastRow => Seq(cell.moveUp, cell.moveRight)
+      case cell => Seq(cell.moveUp, cell.moveDown, cell.moveRight)
+    }
   }
 
+  val values = mutable.Map[Position, Int]() ++ (for {
+    r <- 0 to lastRow
+    c <- 0 to lastCol
+  } yield Position(r, c) -> input(r)(c))
 
-  def nextCells(actualCell: Position): Seq[Position] = actualCell match {
-    case cell if cell.isEndPosition => Nil
-    case cell if cell.isFirstRow => Seq(cell.moveDown, cell.moveRight)
-    case cell if cell.isLastRow => Seq(cell.moveUp, cell.moveRight)
-    case cell => Seq(cell.moveUp, cell.moveDown, cell.moveRight)
-  }
+  val distance: mutable.Map[Position, Int] = mutable.Map[Position, Int]() ++
+    (for {r <- 0 to lastRow} yield Position(r, 0)).map(p => p -> values(p))
 
-  val distance = mutable.Map[Position, Int]() ++
-    (for {r <- 0 to lastRow} yield Position(r, 0) -> input(r)(0))
-
-  val previous = mutable.Map[Position, Position]()
 
   case class PositionsToExplore(priority: Int, position: Position) extends Ordered[PositionsToExplore] {
     def compare(that: PositionsToExplore) = that.priority compare this.priority
@@ -65,7 +68,7 @@ object solution {
     var result: Int = Int.MaxValue
     while (positionsToExplore.nonEmpty) {
       val position = positionsToExplore.dequeue().position
-      val neighbors = nextCells(position)
+      val neighbors = position.nextCells
       neighbors.foreach {
         case neighbor =>
           // val pathValue = distance.getOrElseUpdate(position, Int.MaxValue) + input(neighbor.row)(neighbor.col)
@@ -81,7 +84,6 @@ object solution {
 
           if (pathValue < distance.getOrElse(neighbor, Int.MaxValue)) {
             distance.update(neighbor, pathValue)
-            previous.update(neighbor, position)
             // TODO PriorityQueue are O(n) for random access :-/
             positionsToExplore = positionsToExplore.filterNot(_.position == neighbor)
             positionsToExplore.enqueue(PositionsToExplore(pathValue, neighbor))
