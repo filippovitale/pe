@@ -2,28 +2,27 @@ package pep_082
 
 import scala.collection.mutable
 
-object wip {
+object solution {
 
   val filename = "src/pep_082/matrix.txt"
-  // val input = io.Source.fromFile(filename).mkString.trim.split("\n").map(_.split(",") map (_.toInt))
-  val input = """
-                |131	673	234	103	18
-                |201	96	342	965	150
-                |630	803	746	422	111
-                |537	699	497	121	956
-                |805	732	524	37	331
-              """.stripMargin.trim.split("\n").map(_.split("\t") map (_.toInt))
+  val input = io.Source.fromFile(filename).mkString.trim.split("\n").map(_.split(",") map (_.toInt))
   val lastRow = input.size - 1
   val lastCol = input.head.size - 1
 
   case class Position(row: Int = 0, col: Int = 0) {
-    def isEndPosition: Boolean = isLastCol
-
     def isFirstRow: Boolean = row == 0
+
+    def isFirstCol: Boolean = col == 0
 
     def isLastRow: Boolean = row == lastRow
 
     def isLastCol: Boolean = col == lastCol
+
+
+    def isStartPosition: Boolean = isFirstCol
+
+    def isEndPosition: Boolean = isLastCol
+
 
     def moveUp: Position = Position(row - 1, col)
 
@@ -32,8 +31,9 @@ object wip {
     def moveDown: Position = Position(row + 1, col)
   }
 
+
   def nextCells(actualCell: Position): Seq[Position] = actualCell match {
-    case cell if cell.isLastCol => Nil
+    case cell if cell.isEndPosition => Nil
     case cell if cell.isFirstRow => Seq(cell.moveDown, cell.moveRight)
     case cell if cell.isLastRow => Seq(cell.moveUp, cell.moveRight)
     case cell => Seq(cell.moveUp, cell.moveDown, cell.moveRight)
@@ -75,8 +75,7 @@ object wip {
             Int.MaxValue
           }
 
-          val aaa = pathValue < result
-          if (neighbor.isEndPosition && aaa) {
+          if (neighbor.isEndPosition && pathValue < result) {
             result = pathValue
           }
 
