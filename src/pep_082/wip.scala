@@ -5,20 +5,18 @@ import scala.collection.mutable
 object wip {
 
   val filename = "src/pep_082/matrix.txt"
-  //  val input = io.Source.fromFile(filename).mkString.trim.split("\n").map(_.split(",") map (_.toInt))
-  val input = """
-                |131	673	234	103	18
-                |201	96	342	965	150
-                |630	803	746	422	111
-                |537	699	497	121	956
-                |805	732	524	37	331
-              """.stripMargin.trim.split("\n").map(_.split("\t") map (_.toInt))
+    val input = io.Source.fromFile(filename).mkString.trim.split("\n").map(_.split(",") map (_.toInt))
+//  val input = """
+//                |131	673	234	103	18
+//                |201	96	342	965	150
+//                |630	803	746	422	111
+//                |537	699	497	121	956
+//                |805	732	524	37	331
+//              """.stripMargin.trim.split("\n").map(_.split("\t") map (_.toInt))
   val lastRow = input.size - 1
   val lastCol = input.head.size - 1
 
   case class Position(row: Int = 0, col: Int = 0) {
-    def Start: Position = Position(0, 0)
-
     def isEndPosition: Boolean = isLastCol
 
     def isFirstRow: Boolean = row == 0
@@ -41,7 +39,9 @@ object wip {
     case cell => Seq(cell.moveUp, cell.moveDown, cell.moveRight)
   }
 
-  val distance = mutable.Map[Position, Int](Position().Start -> input(0)(0))
+  val distance = mutable.Map[Position, Int]() ++
+    (for {r <- 0 to lastRow} yield Position(r, 0) -> input(r)(0))
+
   val previous = mutable.Map[Position, Position]()
 
   case class PositionsToExplore(priority: Int, position: Position) extends Ordered[PositionsToExplore] {
@@ -62,19 +62,29 @@ object wip {
   var a = positionsToExplore.length
 
   def solve(): Int = {
-    var result: Int = 0
-    while (result == 0 && positionsToExplore.nonEmpty) {
+    var result: Int = Int.MaxValue
+    while (positionsToExplore.nonEmpty) {
       val position = positionsToExplore.dequeue().position
       val neighbors = nextCells(position)
       neighbors.foreach {
         case neighbor =>
-          val pathValue = distance.getOrElse(position, Int.MaxValue) + input(neighbor.row)(neighbor.col)
-          if (neighbor.isEndPosition) {
+          // val pathValue = distance.getOrElseUpdate(position, Int.MaxValue) + input(neighbor.row)(neighbor.col)
+          val pathValue = if (distance.contains(position)) {
+            distance.get(position).get + input(neighbor.row)(neighbor.col)
+          } else {
+            Int.MaxValue
+          }
+
+          val aaa = pathValue < result
+          if (neighbor.isEndPosition && aaa) {
             result = pathValue
-          } else if (pathValue < distance.getOrElse(neighbor, Int.MaxValue)) {
+          }
+
+          if (pathValue < distance.getOrElse(neighbor, Int.MaxValue)) {
             distance.update(neighbor, pathValue)
             previous.update(neighbor, position)
-            positionsToExplore = positionsToExplore.filterNot(p => p == neighbor) // TODO not very efficient...
+            // TODO PriorityQueue are O(n) for random access :-/
+            positionsToExplore = positionsToExplore.filterNot(_.position == neighbor)
             positionsToExplore.enqueue(PositionsToExplore(pathValue, neighbor))
           }
       }
