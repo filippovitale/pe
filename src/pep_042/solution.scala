@@ -2,7 +2,7 @@ package pep_042
 
 import scala.collection.immutable._
 
-object wip {
+object solution {
 
   val filename = "src/pep_042/words.txt"
   val words = io.Source.fromFile(filename).mkString.trim.split(",").map(_.drop(1).dropRight(1)).toStream
