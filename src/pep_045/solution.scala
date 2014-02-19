@@ -6,31 +6,28 @@ import scala.annotation.tailrec
 object solution {
 
   @deprecated("hexagonalNumbers are also triangleNumbers", "ever")
-  val triangleNumbers: Stream[Long] = {
+  val triangleNumbers = {
     def loop(n: Long): Stream[Long] = ((n * (n + 1)) / 2) #:: loop(n + 1)
     loop(1)
   }
 
-  val pentagonalNumbers: Stream[Long] = {
+  val pentagonalNumbers = {
     def loop(n: Long): Stream[Long] = ((n * (3 * n - 1)) / 2) #:: loop(n + 1)
     loop(1)
   }
 
-  val hexagonalNumbers: Stream[Long] = {
+  val hexagonalNumbers = {
     def loop(n: Long): Stream[Long] = (n * (2 * n - 1)) #:: loop(n + 1)
     loop(1)
   }
 
   @tailrec
-  def findNext(hs: Stream[Long] = hexagonalNumbers,
-               ps: Stream[Long] = pentagonalNumbers): Long = {
+  def findNext(hs: Stream[Long] = hexagonalNumbers, ps: Stream[Long] = pentagonalNumbers): Long = {
 
-    val hh = hs.head
-    val p = ps.dropWhile(n => n < hh)
+    val n = hs.head
+    val p = ps.dropWhile(_ < n)
 
-    val ph = p.head
-
-    if (hh == ph) hh
+    if (n == p.head) n
     else findNext(hs.tail, p.tail)
   }
 
