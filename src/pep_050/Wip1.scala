@@ -203,3 +203,35 @@ object Wip7 {
   }
 
 }
+
+object Wip8 {
+
+  def print() {
+    val maxPrime = 10000
+    val primes = (2 until maxPrime).filter(BigInt(_).isProbablePrime(5)).to[Array]
+
+    val dt = for {
+      d <- 0 until primes.size
+      r <- d + 1 to primes.size
+      t = r - d
+    } yield (d, t)
+
+    case class Memo[A, B](f: A => B) extends (A => B) {
+      private val cache = mutable.Map.empty[A, B]
+
+      def apply(x: A) = cache getOrElseUpdate(x, f(x))
+    }
+
+    lazy val sumDP: Memo[(Int, Int), Long] = Memo {
+      case (d, 1) => primes(d)
+      case (d, t) => primes(d) + sumDP((d + 1, t - 1))
+    }
+
+    val ts = dt map {
+      case (d, t) => (t, sumDP(d, t))
+    }
+
+    println(ts.filter({case (_, s) => s < 1000000}).filter({case (_, s) => BigInt(s).isProbablePrime(5)}).sortBy({case (t, _) => t}).last._2)
+  }
+
+}
