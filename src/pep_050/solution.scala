@@ -24,7 +24,7 @@ object solution {
     case (d, t) => primes(d) + sumDP((d + 1, t - 1))
   }
 
-  def findLongest(dt: IndexedSeq[(Int, Int)], sumDP: (Int, Int) => Long) = (dt
+  def findLongest(dt: IndexedSeq[(Int, Int)]) = (dt
     filter {
     case (_, t) => t > 21
   } map {
