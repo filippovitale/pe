@@ -192,7 +192,7 @@ object Wip7 {
 
     lazy val sumDP: Memo[(Int, Int), Int] = Memo {
       case (d, 1) => primes(d)
-      case (d, t) => sumDP((d + 1, t - 1))
+      case (d, t) => primes(d) + sumDP((d + 1, t - 1))
     }
 
     val sum2 = dt map {
