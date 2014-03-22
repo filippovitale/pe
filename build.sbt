@@ -15,3 +15,6 @@ lazy val root = (project in file(".")).
 scalaSource in Compile := file("src")
 
 libraryDependencies ++= Seq(    "org.specs2" %% "specs2" % "2.3.7" % "test"  )
+
+//ideaExcludeFolders += ".idea"
+//ideaExcludeFolders += ".idea_modules"
