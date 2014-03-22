@@ -103,14 +103,14 @@ object Wip4 {
   import scala.collection.immutable.IndexedSeq
 
   def print() {
-    val maxPrime = 40
+    val maxPrime = 10
     val primes = (2 until maxPrime).filter(BigInt(_).isProbablePrime(5)).to[IndexedSeq]
 
     val comb = for {
       d <- 0 until primes.size
       r <- d + 1 to primes.size
       t = r - d
-    } yield ((d, r, t), primes.drop(d).take(t))
+    } yield ((d, t), primes.drop(d).take(t))
 
     comb.map(x => x._1.toString() + " " + x._2.mkString(" ")).foreach(println)
   }
@@ -125,11 +125,81 @@ object Wip5 {
     val primes = (2 until maxPrime).filter(BigInt(_).isProbablePrime(5)).to[IndexedSeq]
 
     val comb = for {
-      d <- 0 until primes.size
-      r <- d + 1 to primes.size
-      t = r - d
-    } yield ((d, r, t), primes.drop(d).take(t))
+      e <- 1 to primes.size
+      r <- e to primes.size
+      l = 1 + r - e
+    } yield ((e, l), primes.drop(e - 1).take(l))
 
     comb.map(x => x._1.toString() + " " + x._2.mkString(" ")).foreach(println)
   }
+}
+
+
+object Wip6 {
+
+  def print() {
+    val maxPrime = 10
+    val primes = (2 until maxPrime).filter(BigInt(_).isProbablePrime(5)).to[Array]
+
+    val dt = for {
+      d <- 0 until primes.size
+      r <- d + 1 to primes.size
+      t = r - d
+    } yield (d, t)
+
+    val sum1 = dt.reverse map {
+      case (d, t) => primes.drop(d).take(t).sum
+    }
+
+    sum1.foreach(println)
+
+    //@tailrec
+    def sumR(d: Int, t: Int): Int = t match {
+      case 1 => primes(d)
+      case n => primes(d) + sumR(d + 1, t - 1)
+    }
+    val sum2 = dt map {
+      case (d, t) => sumR(d, t)
+    }
+
+    sum2.foreach(println)
+  }
+}
+
+object Wip7 {
+
+  def print() {
+    val maxPrime = 10
+    val primes = (2 until maxPrime).filter(BigInt(_).isProbablePrime(5)).to[Array]
+
+    val dt = for {
+      d <- 0 until primes.size
+      r <- d + 1 to primes.size
+      t = r - d
+    } yield (d, t)
+
+    val sum1 = dt.reverse map {
+      case (d, t) => primes.drop(d).take(t).sum
+    }
+
+    sum1.foreach(println)
+
+    case class Memo[A, B](f: A => B) extends (A => B) {
+      private val cache = mutable.Map.empty[A, B]
+
+      def apply(x: A) = cache getOrElseUpdate(x, f(x))
+    }
+
+    lazy val sumDP: Memo[(Int, Int), Int] = Memo {
+      case (d, 1) => primes(d)
+      case (d, t) => sumDP((d + 1, t - 1))
+    }
+
+    val sum2 = dt map {
+      case (d, t) => sumDP(d, t)
+    }
+
+    sum2.foreach(println)
+  }
+
 }
