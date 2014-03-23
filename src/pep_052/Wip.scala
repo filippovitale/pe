@@ -7,19 +7,21 @@ object Wip {
     b <- 1 to 6
   } yield Vector(a, b).mkString
 
+  // TODO merge 2 fors
+
   val numbers = for {
     p <- prefix
     n <- 0 to 10000
   } yield Vector(p, n).mkString
 
-  numbers.map(n => (n, n.toInt)).map({
-    case (n, i) => (n, (i * 2).toString)
-  }).map({
-    case (n1, n2) => (n1, n1.sorted, n2.sorted)
-  }).filter({
-    case (n, n1, n2) => n1.sorted == n2.sorted
-  }).map({
-    case (n, n1, n2) => n
-  }).head
+  def solve(): String = {
+    numbers.map(n => (n.toInt, n.sorted)).map({
+      case (i, s1) => (i, s1, (i * 2).toString)
+    }).filter({
+      case (i, s1, n2) => s1 == n2.sorted
+    }).map({
+      case (i, n1, n2) => i.toString
+    }).head
+  }
 
 }
