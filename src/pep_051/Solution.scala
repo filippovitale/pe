@@ -13,9 +13,9 @@ object PrimesSeq {
 
 object Solution {
 
-  val primes6digit = pep_051.PrimesSeq(6).map(_.toString)
+  val primes6digit = PrimesSeq(6).map(_.toString)
 
-  val pattern = for {
+  val pattern3x3 = for {
     a <- 0 to 5
     b <- 0 to 5
     if b > a
@@ -29,15 +29,14 @@ object Solution {
 
   def solve() = {
     val maps = for {
-      p <- pattern
-      aaa <- pep_051.PrimesSeq(6).map(_.toString).groupBy(p._1)
-      bbb = aaa._2
-      ddd = bbb.groupBy(p._2).filter {
+      (p, m) <- pattern3x3
+      (_, g) <- primes6digit.groupBy(p)
+      sameDigits = g.groupBy(m).filter {
         case (d, _) => d._1 == d._2 && d._2 == d._3
       }
-      ccc = ddd.size
-    } yield (ddd, ccc)
+      if sameDigits.size == 8
+    } yield sameDigits
 
-    maps.filter(_._2 == 8).head._1.values.flatten.min
+    maps.head.values.flatten.min
   }
 }
