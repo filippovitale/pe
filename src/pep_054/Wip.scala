@@ -1,5 +1,7 @@
 package pep_054
 
+import scala.::
+
 
 case class Game(line: String) {
   val (player1Cards, player2Cards) = line.split(" ").map(Card).splitAt(5)
@@ -22,23 +24,40 @@ object Wip {
   //  Three of a Kind: Three cards of the same value.
   //  Straight: All cards are consecutive values.
   //  Flush: All cards of the same suit.
-  //  Full House: Three of a kind and a pair.
-  //  Four of a Kind: Four cards of the same value.
-  //  Straight Flush: All cards are consecutive values of same suit.
-  def rankCards(cards: Seq[Card]): Int = {
-    val valuesSet = cards.map(_.value).to[Set]
+  def rankCards(cards: Seq[Card]) = {
+    val values = cards.map(_.value)
+    val valuesSet = values.to[Set]
+    val valuesSorted = values.sorted
     val suitesSet = cards.map(_.suit).to[Set]
 
     val isSameSuit = suitesSet.size == 1
 
     //  Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
-    val isRoyalFlush = valuesSet.forall(Set(10, 11, 12, 13, 14).contains) && isSameSuit
+    val isRoyalFlush = valuesSet == Set(10, 11, 12, 13, 14) && isSameSuit
 
-    -1 // TODO
+    //  Straight Flush: All cards are consecutive values of same suit.
+    val isStraightFlush = valuesSorted.map(_ - valuesSorted.head) == Set(0, 1, 2, 3, 4) && isSameSuit
+
+    //  Four of a Kind: Four cards of the same value.
+    val (isFourOfAKind, fourOfAKindValue) = valuesSorted.groupBy(_.toString).mapValues(_.size).maxBy(_._2) match {
+      case (v, n) if n == 4 => (true, v)
+      case _ => (false, 0)
+    }
+
+    //  Full House: Three of a kind and a pair.
+    val isFullHouse = valuesSorted.groupBy(_.toString).mapValues(_.size).values.to[Set] == Set(2, 3)
+    //    var (fullHouseThreeValue, fullHousePairValue) = ("0", "0")
+    //    if (isFullHouse) fullHouseThreeValue :: fullHousePairValue :: Nil = valuesSorted.groupBy(_.toString).mapValues(_.size).map(_.swap).toSeq.sorted.reverse.map(_._2)
+
+    //    (isRoyalFlush, isStraightFlush, isFourOfAKind, fourOfAKindValue, isFullHouse, fullHouseThreeValue, fullHousePairValue)
   }
 
   def solve() = {
     val firstGame = games.head
+
+    import scala.math.Ordering.Implicits._
+    var x = (true, false) <(false, true)
+
     -1 // TODO
   }
 }
