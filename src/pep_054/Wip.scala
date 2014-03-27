@@ -45,11 +45,12 @@ object Wip {
     }
 
     //  Full House: Three of a kind and a pair.
-    val isFullHouse = valuesSorted.groupBy(_.toString).mapValues(_.size).values.to[Set] == Set(2, 3)
-    //    var (fullHouseThreeValue, fullHousePairValue) = ("0", "0")
-    //    if (isFullHouse) fullHouseThreeValue :: fullHousePairValue :: Nil = valuesSorted.groupBy(_.toString).mapValues(_.size).map(_.swap).toSeq.sorted.reverse.map(_._2)
+    val fullHouseSeq = Seq(3, 2) flatMap valuesSorted.groupBy(_.toString).mapValues(_.size).map(_.swap).get
+    val (isFullHouse, fullHouseThreeValue, fullHousePairValue) = if (fullHouseSeq.size == 2) {
+      (true, fullHouseSeq.head, fullHouseSeq.last)
+    } else (false, "0", "0")
 
-    //    (isRoyalFlush, isStraightFlush, isFourOfAKind, fourOfAKindValue, isFullHouse, fullHouseThreeValue, fullHousePairValue)
+    (isRoyalFlush, isStraightFlush, isFourOfAKind, fourOfAKindValue, isFullHouse, fullHouseThreeValue, fullHousePairValue)
   }
 
   def solve() = {
