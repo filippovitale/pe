@@ -17,26 +17,21 @@ object Wip {
   val filename = "src/pep_054/poker.txt"
   val games = io.Source.fromFile(filename).getLines().toStream.map(Game)
 
-  // TODO
-  //  High Card: Highest value card.
-  //  One Pair: Two cards of the same value.
-  //  Two Pairs: Two different pairs.
-  //  Three of a Kind: Three cards of the same value.
-  //  Straight: All cards are consecutive values.
-  //  Flush: All cards of the same suit.
   def rankCards(cards: Seq[Card]) = {
     val values = cards.map(_.value)
     val valuesSet = values.to[Set]
     val valuesSorted = values.sorted
     val suitesSet = cards.map(_.suit).to[Set]
 
-    val isSameSuit = suitesSet.size == 1
-
     //  Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
-    val isRoyalFlush = valuesSet == Set(10, 11, 12, 13, 14) && isSameSuit
+    val allCardsOfTheSameSuit = suitesSet.size == 1
+    val isRoyalFlush = valuesSet == Set(10, 11, 12, 13, 14) && allCardsOfTheSameSuit
 
     //  Straight Flush: All cards are consecutive values of same suit.
-    val isStraightFlush = valuesSorted.map(_ - valuesSorted.head) == Set(0, 1, 2, 3, 4) && isSameSuit
+    val allCardsAreConsecutiveValues = valuesSorted.map(_ - valuesSorted.head) == Set(0, 1, 2, 3, 4)
+    val highestCard = valuesSorted.last
+    val isStraightFlush = allCardsAreConsecutiveValues && allCardsOfTheSameSuit
+    val straightFlshHighestCard = highestCard
 
     //  Four of a Kind: Four cards of the same value.
     val (isFourOfAKind, fourOfAKindValue) = valuesSorted.groupBy(_.toString).mapValues(_.size).maxBy(_._2) match {
@@ -50,7 +45,34 @@ object Wip {
       (true, fullHouseSeq.head, fullHouseSeq.last)
     } else (false, "0", "0")
 
-    (isRoyalFlush, isStraightFlush, isFourOfAKind, fourOfAKindValue, isFullHouse, fullHouseThreeValue, fullHousePairValue)
+    //  Flush: All cards of the same suit.
+    val isFlush = allCardsOfTheSameSuit
+    val flushHighestCard = highestCard
+
+    //  Straight: All cards are consecutive values.
+    val isStraight = allCardsAreConsecutiveValues
+    val straightHighestCard = highestCard
+
+    //  Three of a Kind: Three cards of the same value.
+    // TODO
+
+    //  Two Pairs: Two different pairs.
+    // TODO
+
+    //  One Pair: Two cards of the same value.
+    // TODO
+
+    //  High Card: Highest value card.
+    // done!
+
+    (isRoyalFlush,
+      isStraightFlush, straightFlshHighestCard,
+      isFourOfAKind, fourOfAKindValue,
+      isFullHouse, fullHouseThreeValue, fullHousePairValue,
+      isFlush, flushHighestCard,
+      isStraight, straightHighestCard,
+
+      highestCard)
   }
 
   def solve() = {
