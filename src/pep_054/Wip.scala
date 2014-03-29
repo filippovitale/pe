@@ -1,11 +1,23 @@
 package pep_054
 
 case class Game(line: String) {
-  val (player1Cards, player2Cards) = line.split(" ").map(Card).splitAt(5)
 
-  def hasPlayer1Won: Boolean = rankCards(player1Cards) > rankCards(player2Cards)
+  val (player1Cards, player2Cards) = line.split(" ").map(Card).splitAt(5) match {
+    case (p1, p2) => (Cards(p1), Cards(p2))
+  }
 
-  def rankCards(cards: Seq[Card]): Long = {
+  def hasPlayer1Won: Boolean = player1Cards.rank > player2Cards.rank
+
+}
+
+case class Card(s: String) {
+  val value: Int = "  23456789TJQKA".indexOf(s.head)
+  val suit: Char = s.last
+}
+
+case class Cards(cards: Array[Card]) {
+
+  def rank: Long = {
     val values = cards.map(_.value)
     val valuesSet = values.to[Set]
     val valuesSorted = values.sorted
@@ -17,7 +29,7 @@ case class Game(line: String) {
     val isRoyalFlush = valuesSet == Set(10, 11, 12, 13, 14) && allCardsOfTheSameSuit
 
     //  Straight Flush: All cards are consecutive values of same suit.
-    val allCardsAreConsecutiveValues = valuesSorted.map(_ - valuesSorted.head) == Set(0, 1, 2, 3, 4)
+    val allCardsAreConsecutiveValues = valuesSorted.map(_ - valuesSorted.head) == Set(0, 1, 2, 3, 4) // TODO maybe bug
     val isStraightFlush = allCardsAreConsecutiveValues && allCardsOfTheSameSuit
     val highestCard = valuesSorted.last
 
@@ -133,11 +145,6 @@ case class Game(line: String) {
     rank
   }
 
-}
-
-case class Card(s: String) {
-  val value: Int = "  23456789TJQKA".indexOf(s.head)
-  val suit: Char = s.last
 }
 
 object Wip {
