@@ -128,7 +128,7 @@ case class Cards(cards: Array[Card]) {
 
 }
 
-object Wip {
+object Solution {
 
   def solve() = {
     val filename = "src/pep_054/poker.txt"
