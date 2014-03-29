@@ -8,7 +8,8 @@ lazy val buildSettings = Seq(
   scalacOptions in Test ++= Seq("-Yrangepos"),
   resolvers += Resolver.sonatypeRepo("public"),
   libraryDependencies ++= Seq(
-    "org.specs2" %% "specs2" % "2.3.10" % "test"
+    "org.specs2" %% "specs2" % "2.3.10" % "test",
+    "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"
   )
 )
 
