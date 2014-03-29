@@ -1,27 +1,16 @@
 package pep_054
 
-import scala.::
-
-
 case class Game(line: String) {
   val (player1Cards, player2Cards) = line.split(" ").map(Card).splitAt(5)
-}
 
-case class Card(s: String) {
-  val value: Int = "  23456789TJQKA".indexOf(s.head)
-  val suit: Char = s.last
-}
+  def hasPlayer1Won: Boolean = rankCards(player1Cards) > rankCards(player2Cards)
 
-object Wip {
-
-  val filename = "src/pep_054/poker.txt"
-  val games = io.Source.fromFile(filename).getLines().toStream.map(Game)
-
-  def rankCards(cards: Seq[Card]) = {
+  def rankCards(cards: Seq[Card]): Long = {
     val values = cards.map(_.value)
     val valuesSet = values.to[Set]
     val valuesSorted = values.sorted
     val suitesSet = cards.map(_.suit).to[Set]
+    val valuesGrouped = values.groupBy(_.toInt).mapValues(_.size) // TODO why I need .toInt?!???!
 
     //  Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
     val allCardsOfTheSameSuit = suitesSet.size == 1
@@ -29,21 +18,20 @@ object Wip {
 
     //  Straight Flush: All cards are consecutive values of same suit.
     val allCardsAreConsecutiveValues = valuesSorted.map(_ - valuesSorted.head) == Set(0, 1, 2, 3, 4)
-    val highestCard = valuesSorted.last
     val isStraightFlush = allCardsAreConsecutiveValues && allCardsOfTheSameSuit
-    val straightFlshHighestCard = highestCard
+    val highestCard = valuesSorted.last
 
     //  Four of a Kind: Four cards of the same value.
-    val (isFourOfAKind, fourOfAKindValue) = valuesSorted.groupBy(_.toString).mapValues(_.size).maxBy(_._2) match {
+    val (isFourOfAKind, fourOfAKindValue) = valuesGrouped.maxBy(_._2) match {
       case (v, n) if n == 4 => (true, v)
       case _ => (false, 0)
     }
 
     //  Full House: Three of a kind and a pair.
-    val fullHouseSeq = Seq(3, 2) flatMap valuesSorted.groupBy(_.toString).mapValues(_.size).map(_.swap).get
+    val fullHouseSeq = Seq(3, 2) flatMap valuesGrouped.map(_.swap).get
     val (isFullHouse, fullHouseThreeValue, fullHousePairValue) = if (fullHouseSeq.size == 2) {
       (true, fullHouseSeq.head, fullHouseSeq.last)
-    } else (false, "0", "0")
+    } else (false, 0, 0)
 
     //  Flush: All cards of the same suit.
     val isFlush = allCardsOfTheSameSuit
@@ -54,33 +42,118 @@ object Wip {
     val straightHighestCard = highestCard
 
     //  Three of a Kind: Three cards of the same value.
-    // TODO
+    val threeOfAKindOption = (Seq(3) flatMap valuesGrouped.map(_.swap).get).headOption
+    val (isThreeOfAKind, threeOfAKindValue, threeOfAKindHighests) = threeOfAKindOption match {
+      case Some(t) => (true, t, (valuesSet - t).max)
+      case None => (false, 0, 0)
+    }
 
     //  Two Pairs: Two different pairs.
-    // TODO
+    val isTwoPair = valuesGrouped.count {
+      case (_, n) => n == 2
+    } == 2
+    val twoPairValues = valuesGrouped.filter({
+      case (_, n) => n == 2
+    }).keys.toSeq.sorted.reverse
 
     //  One Pair: Two cards of the same value.
-    // TODO
+    val isOnePair = valuesGrouped.count {
+      case (_, n) => n == 2
+    } == 1
+    val onePairValue = valuesGrouped.filter({
+      case (_, n) => n == 2
+    }).keys.toSeq.sorted.reverse
 
     //  High Card: Highest value card.
     // done!
 
-    (isRoyalFlush,
-      isStraightFlush, straightFlshHighestCard,
-      isFourOfAKind, fourOfAKindValue,
-      isFullHouse, fullHouseThreeValue, fullHousePairValue,
-      isFlush, flushHighestCard,
-      isStraight, straightHighestCard,
+    var rank: Long = if (isRoyalFlush) 1 else 0
 
-      highestCard)
+    rank <<= 4
+    rank += {
+      if (isStraightFlush) highestCard else 0
+    }
+
+    rank <<= 4
+    rank += {
+      if (isFourOfAKind) fourOfAKindValue else 0
+    }
+
+    rank <<= 8
+    rank += {
+      if (isFullHouse) {
+        (fullHouseThreeValue << 4) + fullHousePairValue
+      } else 0
+    }
+
+    rank <<= 4
+    rank += {
+      if (isFlush) flushHighestCard else 0
+    }
+
+    rank <<= 4
+    rank += {
+      if (isStraight) straightHighestCard else 0
+    }
+
+    rank <<= 8
+    rank += {
+      if (isThreeOfAKind) {
+        (threeOfAKindValue << 4) + threeOfAKindHighests
+      } else 0
+    }
+
+    rank <<= 12
+    rank += {
+      if (isTwoPair) {
+        (twoPairValues.head << 8) + (twoPairValues.last << 4) + (valuesSet -- twoPairValues.to[Set]).max
+      } else 0
+    }
+
+    rank <<= 4
+    rank += {
+      if (isOnePair) onePairValue.head else 0
+    }
+
+    rank <<= 4
+    rank += valuesSorted(4)
+
+    rank <<= 4
+    rank += valuesSorted(3)
+
+    rank <<= 4
+    rank += valuesSorted(2)
+
+    rank <<= 4
+    rank += valuesSorted(1)
+
+    rank <<= 4
+    rank += valuesSorted(0)
+
+    rank
   }
+
+}
+
+case class Card(s: String) {
+  val value: Int = "  23456789TJQKA".indexOf(s.head)
+  val suit: Char = s.last
+}
+
+object Wip {
 
   def solve() = {
-    val firstGame = games.head
+    val filename = "src/pep_054/poker.txt"
+    val games = io.Source.fromFile(filename).getLines().toStream.map(Game)
 
-    import scala.math.Ordering.Implicits._
-    var x = (true, false) <(false, true)
+    games.count(_.hasPlayer1Won)
 
-    -1 // TODO
+    // 379, 621 is wrong
   }
 }
+
+//pep_054.Game("5H 5C 6S 7S KD 2C 3S 8S 8D TD").hasPlayer1Won == false
+//pep_054.Game("5D 8C 9S JS AC 2C 5C 7D 8S QH").hasPlayer1Won == true
+//pep_054.Game("2D 9C AS AH AC 3D 6D 7D TD QD").hasPlayer1Won == false
+//pep_054.Game("4D 6S 9H QH QC 3D 6D 7H QD QS").hasPlayer1Won == true
+//pep_054.Game("2H 2D 4C 4D 4S 3C 3D 3S 9S 9D").hasPlayer1Won == true
