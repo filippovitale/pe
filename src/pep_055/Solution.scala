@@ -1,6 +1,6 @@
 package pep_055
 
-object Wip {
+object Solution {
 
   val MaxIterations = 50
 
