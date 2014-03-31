@@ -1,14 +1,15 @@
 package pep_060
 
+import pep_050.Memo
 import pep_051.PrimesSeq
 
 object Solution {
 
   val primes = PrimesSeq(2, 10000)
 
-  def areConcatenationsPrime(p1: Int, p2: Int): Boolean =
-    PrimesSeq.isPrime((p1.toString + p2.toString).toLong) &&
-      PrimesSeq.isPrime((p2.toString + p1.toString).toLong)
+  lazy val areConcatenationsPrime: Memo[(Int, Int), Boolean] = Memo {
+    case (p1, p2) => Seq((p1, p2), (p2, p1)).map(t => s"${t._1}${t._2}").map(_.toLong).forall(PrimesSeq.isPrime)
+  }
 
   def solve() = {
     for {
