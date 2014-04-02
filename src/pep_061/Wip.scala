@@ -45,17 +45,89 @@ object Wip {
     (cak, cas) <- ctah
   } yield ???
 
-  /*
+  val atch = th(f3t, f5h)
+  val ctbh = th(f5t, f4h)
+  val btah = th(f4t, f3h)
 
-  1)
+  for {
+    (ack, acs) <- th(f3t, f5h)
+    a1 <- ack
+    c2 <- acs
+    (cbk, cbs) <- th(f5t, f4h)
+    c1 <- cbk
+    if c1 == c2
+    b2 <- cbs
+    (bak, bas) <- th(f4t, f3h)
+    b1 <- bak
+    if b1 == b2
+    a2 <- bas
+    if a1 == a2
+  } yield (a1, b1, c1) // List((2556,1225,5612))
+
+  /*
+    1)
     ct == ah
     at == bh
     bt == ch
 
-  2)
+    2)
     bt == ah
     at == ch
     ct == bh
+  */
+
+  for {
+    (a, b, c) <- Seq((f3, f5, f4), (f3, f4, f5))
+    ah = new Formulæ(a).groupByHead
+    at = new Formulæ(a).groupByTail
+    bh = new Formulæ(b).groupByHead
+    bt = new Formulæ(b).groupByTail
+    ch = new Formulæ(c).groupByHead
+    ct = new Formulæ(c).groupByTail
+
+    (ack, acs) <- th(at, ch)
+    a1 <- ack
+    c2 <- acs
+    (cbk, cbs) <- th(ct, bh)
+    c1 <- cbk
+    if c1 == c2
+    b2 <- cbs
+    (bak, bas) <- th(bt, ah)
+    b1 <- bak
+    if b1 == b2
+    a2 <- bas
+    if a1 == a2
+  } yield ((a1, b1, c1), a1 + b1 + c1)
+
+
+  val f: Vector[Int => Int] = Vector(f3, f4, f5, f6, f7, f8)
+
+  for {
+    (a, b, c) <- Seq(
+      (f(0), f(1), f(2)),
+      (f(0), f(2), f(1)))
+    ah = new Formulæ(a).groupByHead
+    at = new Formulæ(a).groupByTail
+    bh = new Formulæ(b).groupByHead
+    bt = new Formulæ(b).groupByTail
+    ch = new Formulæ(c).groupByHead
+    ct = new Formulæ(c).groupByTail
+
+    (ack, acs) <- th(at, ch)
+    a1 <- ack
+    c2 <- acs
+    (cbk, cbs) <- th(ct, bh)
+    c1 <- cbk
+    if c1 == c2
+    b2 <- cbs
+    (bak, bas) <- th(bt, ah)
+    b1 <- bak
+    if b1 == b2
+    a2 <- bas
+    if a1 == a2
+  } yield (a1, b1, c1) // List((2556,1225,5612), (8515,2185,1521))
+
+  /*
 
   http://mathworld.wolfram.com/CircularPermutation.html
 
