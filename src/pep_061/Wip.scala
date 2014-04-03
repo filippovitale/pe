@@ -19,8 +19,8 @@ object Wip {
 
   val f3 = (n: Int) => (n * (n + 1)) / 2
   val f4 = (n: Int) => n * n
-  val f5 = (n: Int) => (n * (3 * n + 1)) / 2
-  val f6 = (n: Int) => n * (2 * n + 1)
+  val f5 = (n: Int) => (n * (3 * n - 1)) / 2
+  val f6 = (n: Int) => n * (2 * n - 1)
   val f7 = (n: Int) => (n * (5 * n - 3)) / 2
   val f8 = (n: Int) => n * (3 * n - 2)
 
@@ -188,9 +188,9 @@ object Wip {
     if a1 == a2
   } yield (a1, b1, c1)
 
-  val sm: Set[Map[Int, Int]] = (0 to 5).permutations.map(_.toList).map(l => (l zip (l.last :: l)).toMap).toSet
+  val sm6: Set[Map[Int, Int]] = (0 to 5).permutations.map(_.toList).map(l => (l zip (l.last :: l)).toMap).toSet
   for {
-    (a, b, c, d, e, f) <- sm.map(circularMapToList).collect { case List(x: Int, y: Int, z: Int, h: Int, k: Int, j: Int) => (f(x), f(y), f(z), f(h), f(k), f(j)) }
+    (a, b, c, d, e, ff) <- sm6.map(circularMapToList).collect { case List(x: Int, y: Int, z: Int, h: Int, k: Int, j: Int) => (f(x), f(y), f(z), f(h), f(k), f(j)) }
     ah = new Formulæ(a).groupByHead
     at = new Formulæ(a).groupByTail
     bh = new Formulæ(b).groupByHead
@@ -201,8 +201,8 @@ object Wip {
     dt = new Formulæ(d).groupByTail
     eh = new Formulæ(e).groupByHead
     et = new Formulæ(e).groupByTail
-    fh = new Formulæ(f).groupByHead
-    ft = new Formulæ(f).groupByTail
+    fh = new Formulæ(ff).groupByHead
+    ft = new Formulæ(ff).groupByTail
 
     (abk, abs) <- th(at, bh)
     a1 <- abk
