@@ -188,6 +188,56 @@ object Wip {
     if a1 == a2
   } yield (a1, b1, c1)
 
+  val sm: Set[Map[Int, Int]] = (0 to 5).permutations.map(_.toList).map(l => (l zip (l.last :: l)).toMap).toSet
+  for {
+    (a, b, c, d, e, f) <- sm.map(circularMapToList).collect { case List(x: Int, y: Int, z: Int, h: Int, k: Int, j: Int) => (f(x), f(y), f(z), f(h), f(k), f(j)) }
+    ah = new Formulæ(a).groupByHead
+    at = new Formulæ(a).groupByTail
+    bh = new Formulæ(b).groupByHead
+    bt = new Formulæ(b).groupByTail
+    ch = new Formulæ(c).groupByHead
+    ct = new Formulæ(c).groupByTail
+    dh = new Formulæ(d).groupByHead
+    dt = new Formulæ(d).groupByTail
+    eh = new Formulæ(e).groupByHead
+    et = new Formulæ(e).groupByTail
+    fh = new Formulæ(f).groupByHead
+    ft = new Formulæ(f).groupByTail
+
+    (abk, abs) <- th(at, bh)
+    a1 <- abk
+    b2 <- abs
+
+    (bck, bcs) <- th(bt, ch)
+    b1 <- bck
+    if b1 == b2
+    c2 <- bcs
+
+    (cdk, cds) <- th(ct, dh)
+    c1 <- cdk
+    if c1 == c2
+    d2 <- cds
+
+    (dek, des) <- th(dt, eh)
+    d1 <- dek
+    if d1 == d2
+    e2 <- des
+
+    (efk, efs) <- th(et, fh)
+    e1 <- efk
+    if e1 == e2
+    f2 <- efs
+
+    (fak, fas) <- th(ft, ah)
+    f1 <- fak
+    if f1 == f2
+    a2 <- fas
+    if a1 == a2
+
+    // TODO
+
+  } yield (a1, b1, c1, d1, e1, f1)
+
   // p3.size *  p4.size *  p5.size *  p6.size *  p7.size * p8.size = 116523008
 
   def areCyclic(s1: Int, s2: Int): Boolean = s1.toString.drop(Digit / 2) == s2.toString.take(Digit / 2)
