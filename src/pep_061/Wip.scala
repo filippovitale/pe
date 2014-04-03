@@ -1,5 +1,8 @@
 package pep_061
 
+import scala.collection.immutable.::
+import scala.::
+
 
 object Wip {
 
@@ -125,7 +128,9 @@ object Wip {
     if b1 == b2
     a2 <- bas
     if a1 == a2
-  } yield (a1, b1, c1) // List((2556,1225,5612), (8515,2185,1521))
+  } yield (a1, b1, c1)
+
+  // List((2556,1225,5612), (8515,2185,1521))
 
   /*
 
@@ -147,6 +152,41 @@ object Wip {
 
    */
 
+  (0 to 2).permutations.map(_.toList).map(l => (l zip (l.last :: l)).toMap).toSet.mkString("\n")
+  (0 to 5).permutations.map(_.toList).map(l => (l zip (l.last :: l)).toMap).toSet.mkString("\n")
+
+
+  def circularMapToList(cm: Map[Int,Int]): List[Int] = {
+    val h = cm.head._1
+    var l = List(h)
+    var i = h
+    while( {i = cm(i);  i!=h} ) { l ::= i }
+    l
+  }
+
+  val sm: Set[Map[Int, Int]] = (0 to 2).permutations.map(_.toList).map(l => (l zip (l.last :: l)).toMap).toSet
+  for {
+    (a, b, c) <- sm.map(circularMapToList).collect { case List(x: Int, y: Int, z: Int) => (f(x), f(y), f(z)) }
+    ah = new Formulæ(a).groupByHead
+    at = new Formulæ(a).groupByTail
+    bh = new Formulæ(b).groupByHead
+    bt = new Formulæ(b).groupByTail
+    ch = new Formulæ(c).groupByHead
+    ct = new Formulæ(c).groupByTail
+
+    (ack, acs) <- th(at, ch)
+    a1 <- ack
+    c2 <- acs
+    (cbk, cbs) <- th(ct, bh)
+    c1 <- cbk
+    if c1 == c2
+    b2 <- cbs
+    (bak, bas) <- th(bt, ah)
+    b1 <- bak
+    if b1 == b2
+    a2 <- bas
+    if a1 == a2
+  } yield (a1, b1, c1)
 
   // p3.size *  p4.size *  p5.size *  p6.size *  p7.size * p8.size = 116523008
 
