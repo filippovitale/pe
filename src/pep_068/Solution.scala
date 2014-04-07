@@ -1,6 +1,6 @@
 package pep_068
 
-object Wip {
+object Solution {
 
   def describeSet(combinations: Seq[Seq[Int]]): String = combinations.map(_.mkString("")).mkString("")
 
@@ -11,14 +11,14 @@ object Wip {
     } yield Seq(ext(i), int(i), int(j))
 
     val extInt = for {
-      e0 <- 1 to 6
-      e1 <- 1 to 10
+      e0 <- 6 to 6
+      e1 <- 7 to 10
       if e0 < e1
-      e2 <- 1 to 10
+      e2 <- 7 to 10
       if e0 < e2 && e2 != e1
-      e3 <- 1 to 10
+      e3 <- 7 to 10
       if e0 < e3 && e3 != e1 && e3 != e2
-      e4 <- 1 to 10
+      e4 <- 7 to 10
       if e0 < e4 && e4 != e1 && e4 != e2 && e4 != e3
       if Set(e0, e1, e2, e3, e4).contains(10)
 
