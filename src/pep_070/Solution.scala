@@ -35,4 +35,16 @@ object EulerPhi {
     result
   }
 
+  // TODO try
+  /*
+    phi = (0 to max).toVector
+    for(int i = 2; i <= max; i++){
+        if (phi[i] == i) {
+            for (int j = i; j <= max; j += i) {
+                phi[j] = phi[j] / i * (i - 1);
+            }
+        }
+    }
+   */
+
 }
