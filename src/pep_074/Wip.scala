@@ -1,6 +1,7 @@
 package pep_074
 
 import pep_050.Memo
+import scala.collection.mutable
 
 object Wip {
 
@@ -108,5 +109,18 @@ object Wip {
   cycleCount("540") == List(("145", 1), ("540", 2))
 
   //def factChainLength(s: String): Int = Iterator.iterate(s)(sumFact).drop(1).takeWhile(_ != s).length + 1
+
+  val factChainLengths = mutable.Map.empty[String, Int]
+
+  def solve() = {
+    for (i <- 1 to 10; s = i.toString) {
+      if (!factChainLengths.contains(s)) { // TODO use getOrElseUpdate
+        cycleCount(s).foreach(factChainLengths += _)
+      }
+    }
+
+    factChainLengths.count(_._2 == 60)
+  }
+
 
 }
