@@ -22,4 +22,5 @@ object Wip {
     }
   }
 
+  def solve(max: Int = 1500000) = (1 to max).par.map(isPerimiterOfHowManyRightAngleTriangle).count(_ == 1)
 }
