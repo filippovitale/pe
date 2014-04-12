@@ -1,5 +1,7 @@
 package pep_075
 
+import scala.annotation.tailrec
+
 object GCD {
   def gcd(a: Int, b: Int): Int = {
     var y = 0
@@ -19,6 +21,13 @@ object GCD {
       y = temp % x
     }
     y
+  }
+
+  @tailrec
+  def gcdR(m: Int, n: Int): Int = if (n > m) gcdR(n, m)
+  else {
+    if (m % n == 0) n
+    else gcdR(n, m - n * (m / n))
   }
 }
 
