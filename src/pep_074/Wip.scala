@@ -19,10 +19,102 @@ object Wip {
 
   def sumFact(s: String): String = s.map(fact).sum.toString
 
+  //  def sumFact(s: String, set: Set[String]): (String, Set[String]) = {
+  //    val next = s.map(fact).sum.toString
+  //    (next, set + s + next)
+  //  }
+
   //  def factChainLength(s: String): Int = Iterator.iterate(s)(sumFact).drop(1).takeWhile(_ != s).length + 1
 
-  lazy val factChainLength: Memo[String, Int] = Memo {
-    s => Iterator.iterate(s)(sumFact).drop(1).takeWhile(_ != s).length + 1
+  //  lazy val factChainLength: Memo[(String, Set[String]), Int] = Memo {
+  //    s => Iterator.iterate((s, Set[String]()))(sumFact).drop(1).takeWhile(_ != s).length + 1
+  //  }
+
+  lazy val nextFact: Memo[String, String] = Memo(_.map(fact).sum.toString)
+
+  // http://en.wikipedia.org/wiki/Cycle_detection#Brent.27s_algorithm
+  def brent(f: (String) => String = nextFact, x0: String) = {
+    var power = 1
+    var λ = 1
+
+    var tortoise = x0
+    var hare = f(x0)
+
+    while (tortoise != hare) {
+      if (power == λ) {
+        tortoise = hare
+        power *= 2
+        λ = 0
+      }
+      hare = f(hare)
+      λ += 1
+
+    }
+
+    var μ = 0
+    tortoise = x0
+    hare = x0
+    for (i <- 1 until λ) {
+      hare = f(hare)
+    }
+    // The distance between the hare and tortoise is now λ
+
+    // Next, the hare and tortoise move at same speed till they agree
+    while (tortoise != hare) {
+      tortoise = f(tortoise)
+      hare = f(hare)
+      μ += 1
+    }
+
+    (λ, μ)
   }
+
+  def cycleCount(s: String, set: Set[String] = Set(), list: List[String] = List()): Seq[(String, Int)] = {
+    val next = nextFact(s)
+    val nextSet = set + s
+    val nextList = s :: list
+
+//    if (s == next) {
+//      Seq(s -> 1)
+//    } else
+    if (nextSet.contains(next)) {
+      // List dissect
+      val cycle = next :: nextList.takeWhile(_ != next)
+      val cycleLength = cycle.length
+      //      if (cycleLength == nextSet.size) {
+      //        cycle map (_ -> cycleLength)
+      //      } else {
+      val rest = nextList.drop(cycleLength).zipWithIndex.map {
+        case (k, l) => (k, l + cycleLength + 1)
+      }
+      cycle.map(_ -> cycleLength) ::: rest
+      //      }
+    } else {
+      cycleCount(next, nextSet, nextList)
+    }
+  }
+
+  // Tests
+
+  // 145 → 145
+  cycleCount("145") == Seq("145" -> 1)
+
+  // 169 → 363601 → 1454 (→ 169)
+  cycleCount("169") ==
+    cycleCount("363601", Set("169"), List("169")) ==
+    cycleCount("1454", Set("169", "363601"), List("363601", "169")) ==
+    // cycleCount("169", Set("169", "1454", "363601"), List("1454", "363601", "169"))
+    Seq("169" -> 3, "1454" -> 3, "363601" -> 3)
+
+  // 69 → 363600 → 1454 → 169 → 363601 (→ 1454)
+  cycleCount("69") == List((1454, 3), (363601, 3), (169, 3), (363600, 4), (69, 5))
+
+  // 78 → 45360 → 871 → 45361 (→ 871)
+  cycleCount("78") == List((871, 2), (45361, 2), (45360, 3), (78, 4))
+
+  // 540 → 145 (→ 145)
+  cycleCount("540") == List((145, 1), (540, 2))
+
+  //def factChainLength(s: String): Int = Iterator.iterate(s)(sumFact).drop(1).takeWhile(_ != s).length + 1
 
 }
