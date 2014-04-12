@@ -19,20 +19,23 @@ object Solution {
 
   lazy val nextFact: Memo[String, String] = Memo(_.map(fact).sum.toString)
 
-  def cycleCount(s: String, set: Set[String] = Set(), list: List[String] = List()): Seq[(String, Int)] = {
-    val next = nextFact(s)
-    val nextSet = set + s
-    val nextList = s :: list
+  def cycleCount(s: String): Seq[(String, Int)] = cycleCount(s, Set(s), List(s))
 
-    if (nextSet.contains(next)) {
-      val cycle = next :: nextList.takeWhile(_ != next)
+  def cycleCount(s: String, set: Set[String], list: List[String]): Seq[(String, Int)] = {
+    val next = nextFact(s)
+
+    // TODO optimise checking factChainLengths
+    // if (factChainLengths.contains(next)) {
+
+    if (set.contains(next)) {
+      val cycle = next :: list.takeWhile(_ != next)
       val cycleLength = cycle.length
-      val rest = nextList.drop(cycleLength).zipWithIndex.map {
+      val rest = list.drop(cycleLength).zipWithIndex.map {
         case (k, l) => (k, l + cycleLength + 1)
       }
       cycle.map(_ -> cycleLength) ::: rest
     } else {
-      cycleCount(next, nextSet, nextList)
+      cycleCount(next, set + next, next :: list)
     }
   }
 
