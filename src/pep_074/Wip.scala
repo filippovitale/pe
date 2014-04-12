@@ -74,21 +74,13 @@ object Wip {
     val nextSet = set + s
     val nextList = s :: list
 
-//    if (s == next) {
-//      Seq(s -> 1)
-//    } else
     if (nextSet.contains(next)) {
-      // List dissect
       val cycle = next :: nextList.takeWhile(_ != next)
       val cycleLength = cycle.length
-      //      if (cycleLength == nextSet.size) {
-      //        cycle map (_ -> cycleLength)
-      //      } else {
       val rest = nextList.drop(cycleLength).zipWithIndex.map {
         case (k, l) => (k, l + cycleLength + 1)
       }
       cycle.map(_ -> cycleLength) ::: rest
-      //      }
     } else {
       cycleCount(next, nextSet, nextList)
     }
@@ -107,13 +99,13 @@ object Wip {
     Seq("169" -> 3, "1454" -> 3, "363601" -> 3)
 
   // 69 → 363600 → 1454 → 169 → 363601 (→ 1454)
-  cycleCount("69") == List((1454, 3), (363601, 3), (169, 3), (363600, 4), (69, 5))
+  cycleCount("69") == List(("1454", 3), ("363601", 3), ("169", 3), ("363600", 4), ("69", 5))
 
   // 78 → 45360 → 871 → 45361 (→ 871)
-  cycleCount("78") == List((871, 2), (45361, 2), (45360, 3), (78, 4))
+  cycleCount("78") == List(("871", 2), ("45361", 2), ("45360", 3), ("78", 4))
 
   // 540 → 145 (→ 145)
-  cycleCount("540") == List((145, 1), (540, 2))
+  cycleCount("540") == List(("145", 1), ("540", 2))
 
   //def factChainLength(s: String): Int = Iterator.iterate(s)(sumFact).drop(1).takeWhile(_ != s).length + 1
 
