@@ -40,4 +40,39 @@ object Solution {
   //  a(2k) = k^2, a(2k-1) = k(k-1).
 
   // a(2 * 50) = 50 * 50
+
+  def wip1() = { // works for 1 to 2
+    val n = 5
+
+    val l = for {
+      a <- 1 until n
+      b = n - a
+    } yield Seq(a, b)
+
+    l.partition(_.head < 3)
+    // Seq(Vector(List(1, 4), List(2, 3)),Vector(List(3, 2), List(4, 1)))
+
+    l.flatMap(_.tail)
+    // Seq(Vector(List(1, 4), List(2, 3)),Vector(List(3, 2), List(4, 1)))
+  }
+
+  def wip2(n: Int) = {
+    val l = for {
+      b <- 1 until n
+      a = n - b
+    } yield Seq(a, b)
+    // l works for 1 to 2
+
+    // partition
+    l.partition(xs => xs.head < xs.last)
+
+    // TODO
+
+    // for every b > 1 recur
+    // eg (1,2) -> [(1,1,1)]
+
+    // better than (filter not monotonic List) is
+
+    //.flatMap(_.tail)
+  }
 }
