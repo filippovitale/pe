@@ -30,13 +30,31 @@ object PE {
     math.sqrt(x + y)
   }
 
-  def rotate(center: XY, point: XY, angle: Double): XY = {
-    XY(1.5, 1.5)
+  def rotate(center: XY, point: XY, theta: Double, scale: Double): XY = {
+    // (x, y)-->(0.6 x+0.8 y-0.2, -0.8 x+0.6 y+0.6)
+    // RotationTransform[-ArcCos[3/5], {0.5, 0.5}][{x, y}]
+
+    val ct = math.cos(theta)
+    val st = math.sin(theta)
+
+    val dx = point.x - center.x
+    val dy = point.y - center.y
+
+    val x = ct * dx - st * dy + center.x
+    val y = ct * dx + ct * dy + center.y
+
+    // TODO w/matrix --> Translate(-C.x, -C.y) * Scale(sqrt(2)) * Rotate(???°) * Translate(C.x, C.y)
+    XY(x * scale, x * scale)
   }
 
   case class State(center: XY, point: XY) {
     lazy val innerRadius: Double = distance(center, point)
     lazy val outerRadius: Double = innerRadius * math.sqrt(2)
+
+    //    lazy val tlCorner = rotate(center, point, ??? * math.Pi, math.sqrt(2))
+    lazy val trCorner = rotate(center, point, -0.25 * math.Pi, math.sqrt(2))
+    lazy val blCorner = rotate(center, point, 0.25 * math.Pi, math.sqrt(2))
+    //    lazy val brCorner = rotate(center, point, ??? * math.Pi, math.sqrt(2))
   }
 
   @JSExport
@@ -64,16 +82,25 @@ object PE {
       unit
     }
 
-    def resize(): Unit = {
-      val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
-      val state = State(XY(0.0, 0.0), XY(0.0, 0.5))
-      dom.console.info(s"${state}")
-      drawPoint(unit)(state.point)
+    def drawState(unit: Double)(state: State): Unit = {
+      dom.console.info(s"state.trCorner=${state.trCorner}")
+      //      drawPoint(unit)(state.tlCorner)
+      drawPoint(unit)(state.trCorner)
+      drawPoint(unit)(state.blCorner)
+      //      drawPoint(unit)(state.brCorner)
     }
 
     def drawPoint(unit: Double)(p: XY): Unit = ctx.fillRect(p.x * unit, p.y * unit, 2, 2)
 
-    dom.window.addEventListener("resize", { _: Event => resize()}, useCapture = false)
-    resize()
+    dom.window.addEventListener("resize", { _: Event => draw()}, useCapture = false)
+    draw()
+
+
+    def draw(): Unit = {
+      val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
+      val state = State(XY(0.0, 0.0), XY(0.0, 0.5))
+      drawState(unit)(state)
+    }
+
   }
 }
