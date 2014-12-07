@@ -1,0 +1,139 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      3583,        129]
+NotebookOptionsPosition[      2957,        102]
+NotebookOutlinePosition[      3313,        118]
+CellTagsIndexPosition[      3270,        115]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"Graphics", "[", 
+  RowBox[{"Rectangle", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"0", ",", "0"}], "}"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.625732096149414*^9, 3.625732145973097*^9}, {
+  3.625732725160288*^9, 3.625732747902206*^9}, {3.625732792676785*^9, 
+  3.625732859705142*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[RectangleBox[{0, 0}, {5, 5}]]], "Output",
+ CellChangeTimes->{{3.625732846283393*^9, 3.62573286349371*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Show", "[", 
+  RowBox[{
+   RowBox[{"Graphics", "[", 
+    RowBox[{"Rectangle", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"5", ",", "5"}], "}"}]}], "]"}], "]"}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", "Small"}]}], "]"}]], "Input",
+ NumberMarks->False],
+
+Cell[BoxData[
+ GraphicsBox[RectangleBox[{0, 0}, {5, 5}],
+  ImageSize->Small]], "Output",
+ CellChangeTimes->{3.625733000780334*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Graphics", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"Polygon", "[", 
+     RowBox[{"{", 
+      RowBox[{"Gray", ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.5"}], ",", 
+         RowBox[{"-", "0.5"}]}], "}"}], ",", " ", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.5"}], ",", "0.5"}], "}"}], ",", " ", 
+       RowBox[{"{", 
+        RowBox[{"0.5", ",", "0.5"}], "}"}], ",", " ", 
+       RowBox[{"{", 
+        RowBox[{"0.5", ",", 
+         RowBox[{"-", "0.5"}]}], "}"}]}], "}"}], "]"}], ",", 
+    RowBox[{"Point", "[", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0"}], "}"}], "]"}]}], "}"}], "]"}]], "Input",
+ CellChangeTimes->{{3.625771483702024*^9, 3.625771574089608*^9}, 
+   3.62577167120089*^9, {3.625771709626444*^9, 3.6257717265813932`*^9}, {
+   3.625771789437546*^9, 3.625771803552194*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{
+   PolygonBox[{
+    GrayLevel[0.5], {-0.5, -0.5}, {-0.5, 0.5}, {0.5, 0.5}, {0.5, -0.5}}], 
+   PointBox[{0, 0}]}]], "Output",
+ CellChangeTimes->{3.625771727146536*^9, 3.62577180784564*^9}]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.625732840929398*^9, 3.625732841521534*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.625732127530346*^9, 3.625732128082573*^9}}]
+},
+WindowSize->{740, 751},
+WindowMargins->{{Automatic, 19}, {Automatic, 12}},
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
+2013)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 392, 10, 28, "Input"],
+Cell[974, 34, 133, 2, 374, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1144, 41, 353, 11, 28, "Input"],
+Cell[1500, 54, 130, 3, 195, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1667, 62, 865, 24, 46, "Input"],
+Cell[2535, 88, 216, 5, 375, "Output"]
+}, Open  ]],
+Cell[2766, 96, 92, 1, 28, InheritFromParent],
+Cell[2861, 99, 92, 1, 28, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
+
