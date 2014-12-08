@@ -196,7 +196,7 @@ object Wip7 {
     }
 
     val sum2 = dt map {
-      case (d, t) => sumDP(d, t)
+      case (d, t) => sumDP((d, t))
     }
 
     sum2.foreach(println)
@@ -228,7 +228,7 @@ object Wip8 {
     }
 
     val ts = dt map {
-      case (d, t) => (t, sumDP(d, t))
+      case (d, t) => (t, sumDP((d, t)))
     }
 
     println(ts.filter({case (_, s) => s < 1000000}).filter({case (_, s) => BigInt(s).isProbablePrime(5)}).sortBy({case (t, _) => t}).last._2)

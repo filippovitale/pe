@@ -28,11 +28,11 @@ object solution {
     filter {
     case (_, t) => t > 21
   } map {
-    case (d, t) => (t, sumDP(d, t))
+    case (d, t) => (t, sumDP((d, t)))
   } filter {
-    case (_, s) => s < 1000000
+    case (_, s: Long) => s < 1000000
   } filter {
-    case (_, s) => PrimesSeq.isPrime(s)
+    case (_, s: Long) => PrimesSeq.isPrime(s)
   } sortBy {
     case (t, _) => t
   }).last // (t, s)
