@@ -30,18 +30,18 @@ object PE {
     math.sqrt(x + y)
   }
 
-  def rotate(center: XY, point: XY, theta: Double, scale: Double): XY = {
+  def rotate(center: XY, point: XY, θ: Double, scale: Double): XY = {
     // (x, y)-->(0.6 x+0.8 y-0.2, -0.8 x+0.6 y+0.6)
     // RotationTransform[-ArcCos[3/5], {0.5, 0.5}][{x, y}]
 
-    val ct = math.cos(theta)
-    val st = math.sin(theta)
+    val cosθ = math.cos(θ)
+    val sinθ = math.sin(θ)
 
-    val dx = point.x - center.x
-    val dy = point.y - center.y
+    val δx = point.x - center.x
+    val δy = point.y - center.y
 
-    val x = ct * dx - st * dy + center.x
-    val y = ct * dx + ct * dy + center.y
+    val x = cosθ * δx - sinθ * δy + center.x
+    val y = cosθ * δx + cosθ * δy + center.y
 
     // TODO w/matrix --> Translate(-C.x, -C.y) * Scale(sqrt(2)) * Rotate(???°) * Translate(C.x, C.y)
     XY(x * scale, x * scale)
@@ -95,8 +95,10 @@ object PE {
     dom.window.addEventListener("resize", { _: Event => draw()}, useCapture = false)
     draw()
 
-
     def draw(): Unit = {
+      println("rotate(XY(0,0), XY(0,5), (3.0/4) * math.Pi, 1)=" + rotate(XY(0,0), XY(0,5), (3.0/4) * math.Pi, 1))
+      println("rotate(XY(-3,20), XY(7,12), (3.0/4) * math.Pi, 1)=" + rotate(XY(-3,20), XY(7,12), (3.0/4) * math.Pi, 1))
+
       val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
       val state = State(XY(0.0, 0.0), XY(0.0, 0.5))
       drawState(unit)(state)
