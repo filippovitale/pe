@@ -1,9 +1,9 @@
 package pep_395
 
-import org.scalajs.dom
-import org.scalajs.dom.Event
+//import org.scalajs.dom
+//import org.scalajs.dom.Event
 
-import scala.scalajs.js.annotation.JSExport
+//import scala.scalajs.js.annotation.JSExport
 
 object Wip extends App {
 
@@ -17,7 +17,7 @@ object Wip extends App {
   println(startingPoint.outerRadius)
 }
 
-@JSExport
+//@JSExport
 object PE {
 
   case class XY(x: Double, y: Double)
@@ -57,6 +57,7 @@ object PE {
     //    lazy val brCorner = rotate(center, point, ??? * math.Pi, math.sqrt(2))
   }
 
+  /*
   @JSExport
   def main(canvas: dom.HTMLCanvasElement): Unit = {
     val ctx = canvas.getContext("2d").asInstanceOf[dom.CanvasRenderingContext2D]
@@ -105,4 +106,5 @@ object PE {
     }
 
   }
+  */
 }
