@@ -12,10 +12,6 @@ object Settings {
     , "-language:higherKinds"
     , "-language:implicitConversions"
     , "-unchecked"
-    //, "-Xfatal-warnings"
-    //, "-Xlint"
-    //, "-Ywarn-numeric-widen"
-    //, "-Ywarn-value-discard"
     , "-Yno-adapted-args"
     , "-Xmax-classfile-name", "240"
   )

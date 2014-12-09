@@ -14,7 +14,7 @@ trait Modules {
     Project(id = "pe-solution"
       , base = file("pe-solution")
       , settings = standardSettings ++ Seq(
-          mainClass in (Compile, assembly) := Some("it.filippovitale.Main"),
+          mainClass in (Compile, assembly) := Some("Main"),
           test in assembly := {},
           javacOptions in run ++= Seq(
             "-encoding", "UTF-8",
