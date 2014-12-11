@@ -5,17 +5,25 @@ package pep_395
 
 //import scala.scalajs.js.annotation.JSExport
 
-object Wip {
+//object Wip {
+//
+//  import pep_395.PE._
+//
+//  val startingBoundries = XY(0, 0)
+//  val startingPoint = State(XY(0, 0), XY(0, 0.5))
+//
+//  def solve(): Unit = {
+//    println(startingPoint)
+//    println(startingPoint.innerRadius)
+//    println(startingPoint.outerRadius)
+//  }
+//}
 
-  import pep_395.PE._
+import scala.scalajs.js.JSApp
 
-  val startingBoundries = XY(0, 0)
-  val startingPoint = State(XY(0, 0), XY(0, 0.5))
-
-  def solve(): Unit = {
-    println(startingPoint)
-    println(startingPoint.innerRadius)
-    println(startingPoint.outerRadius)
+object Wip extends JSApp {
+  def main(): Unit = {
+    println("Hello world!")
   }
 }
 
