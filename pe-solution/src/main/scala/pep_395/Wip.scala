@@ -5,16 +5,18 @@ package pep_395
 
 //import scala.scalajs.js.annotation.JSExport
 
-object Wip extends App {
+object Wip {
 
   import pep_395.PE._
 
   val startingBoundries = XY(0, 0)
   val startingPoint = State(XY(0, 0), XY(0, 0.5))
 
-  println(startingPoint)
-  println(startingPoint.innerRadius)
-  println(startingPoint.outerRadius)
+  def solve(): Unit = {
+    println(startingPoint)
+    println(startingPoint.innerRadius)
+    println(startingPoint.outerRadius)
+  }
 }
 
 //@JSExport
