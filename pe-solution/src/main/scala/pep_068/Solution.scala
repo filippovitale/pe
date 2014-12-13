@@ -36,12 +36,12 @@ object Solution {
       i4 = ((1 to 9).toSet -- Set(e0, e1, e2, i0, i1, i2, i3)).head
     } yield (Vector(e0, e1, e2, e3, e4), Vector(i0, i1, i2, i3, i4))
 
-    (extInt map {
+    val magic16DigitStrings = extInt map {
       case (e, i) => combinations(e, i)
     } filter {
       _.map(_.sum).distinct.length == 1
-    } map {
-      describeSet
-    } sorted).last
+    } map describeSet
+
+    magic16DigitStrings.sorted.last
   }
 }

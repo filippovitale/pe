@@ -20,7 +20,7 @@ object Wip {
 }
 
 
-@JSExport
+@JSExport("PE")
 object PE {
 
   case class XY(x: Double, y: Double)
