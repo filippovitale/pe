@@ -5,7 +5,8 @@ import sbtassembly.AssemblyPlugin.autoImport._
 
 import scala.scalajs.sbtplugin.ScalaJSPlugin._
 
-//import com.lihaoyi.workbench.Plugin._
+import com.lihaoyi.workbench.Plugin._
+import ScalaJSKeys._
 
 trait Modules {
   lazy val common =
@@ -14,17 +15,28 @@ trait Modules {
       , settings = standardSettings
     )
 
+  lazy val scalajs = Def.setting(Seq(
+    "org.scala-lang.modules.scalajs" %%% "scalajs-jquery" % "0.6",
+    "com.scalatags" %%% "scalatags" % "0.4.2"
+  ))
+
   lazy val solution =
     Project(id = "pe-solution"
       , base = file("pe-solution")
       , settings = standardSettings ++ Seq(
         mainClass in(Compile, assembly) := Some("Main"),
         test in assembly := {},
+        bootSnippet := "PE().main(document.getElementById('canvas'));",
+        updateBrowsers <<= updateBrowsers.triggeredBy(ScalaJSKeys.fastOptJS in Compile),
         javacOptions in run ++= Seq(
           "-encoding", "UTF-8",
           "-XX:+UnlockCommercialFeatures", "-XX:+FlightRecorder",
           "-XX:FlightRecorderOptions=samplethreads=true"))
-    ).settings(scalaJSSettings: _*).dependsOn(common)
+    ).settings(scalaJSSettings: _*)
+      .settings(workbenchSettings: _*)
+      // .settings(buildSettings: _*)
+      .settings(libraryDependencies ++= scalajs.value)
+      .dependsOn(common)
 
   lazy val all =
     Project(id = "all"

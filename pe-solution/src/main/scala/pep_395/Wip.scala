@@ -1,33 +1,26 @@
 package pep_395
 
-//import org.scalajs.dom
-//import org.scalajs.dom.Event
+import org.scalajs.dom
+import org.scalajs.dom.Event
 
-//import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExport
 
-//object Wip {
-//
-//  import pep_395.PE._
-//
-//  val startingBoundries = XY(0, 0)
-//  val startingPoint = State(XY(0, 0), XY(0, 0.5))
-//
-//  def solve(): Unit = {
-//    println(startingPoint)
-//    println(startingPoint.innerRadius)
-//    println(startingPoint.outerRadius)
-//  }
-//}
+object Wip {
 
-import scala.scalajs.js.JSApp
+  import pep_395.PE._
 
-object Wip extends JSApp {
-  def main(): Unit = {
-    println("Hello world!")
+  val startingBoundries = XY(0, 0)
+  val startingPoint = State(XY(0, 0), XY(0, 0.5))
+
+  def solve(): Unit = {
+    println(startingPoint)
+    println(startingPoint.innerRadius)
+    println(startingPoint.outerRadius)
   }
 }
 
-//@JSExport
+
+@JSExport
 object PE {
 
   case class XY(x: Double, y: Double)
@@ -67,7 +60,6 @@ object PE {
     //    lazy val brCorner = rotate(center, point, ??? * math.Pi, math.sqrt(2))
   }
 
-  /*
   @JSExport
   def main(canvas: dom.HTMLCanvasElement): Unit = {
     val ctx = canvas.getContext("2d").asInstanceOf[dom.CanvasRenderingContext2D]
@@ -116,5 +108,4 @@ object PE {
     }
 
   }
-  */
 }
