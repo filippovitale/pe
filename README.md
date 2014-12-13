@@ -3,8 +3,8 @@ I would like to publish some solutions and libraries I made while solving some i
 
 #### Languages used
  * Clojure / ClojureScript
- * Scala
+ * Scala / Scala.js
  * C#
  * CUDA (C++)
- * Go
  * CoffeScript / JavaScript
+ * Go
