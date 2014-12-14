@@ -29,7 +29,7 @@ class RotationCheck extends Specification with ScalaCheck {
   }
 
   def ex3 = Prop.forAll(anyXY, anyXY) { (p: XY, c: XY) =>
-    val pr = PE.scaleAndRotate(c, p, 2 * math.Pi, 1)
+    val pr = p.scaleAndRotate(c, 2 * math.Pi, 1)
     math.abs(p.x - pr.x) must be_<(ε)
     math.abs(p.y - pr.y) must be_<(ε)
   }

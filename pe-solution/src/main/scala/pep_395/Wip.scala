@@ -40,26 +40,26 @@ object PE {
       val b2 = math.pow(y - p2.y, 2)
       math.sqrt(a2 + b2)
     }
+
+    def scaleAndRotate(center: XY, θ: Double, scale: Double): XY =
+      this
+        .t(center.s(-1))
+        .s(scale)
+        .r(θ)
+        .t(center)
   }
 
   case class Boundary(bl: XY, tr: XY)
-
-  def scaleAndRotate(center: XY, point: XY, θ: Double, scale: Double): XY =
-    point
-      .t(center.s(-1))
-      .s(scale)
-      .r(θ)
-      .t(center)
 
   case class State(center: XY, point: XY) {
     lazy val scale = math.sqrt(2)
     lazy val innerRadius: Double = point.distance(center)
     lazy val outerRadius: Double = innerRadius * scale
 
-    lazy val tlCorner = scaleAndRotate(center, point, +0.25 * math.Pi, scale)
-    lazy val trCorner = scaleAndRotate(center, point, -0.25 * math.Pi, scale)
-    lazy val brCorner = scaleAndRotate(center, point, -0.75 * math.Pi, scale)
-    lazy val blCorner = scaleAndRotate(center, point, +0.75 * math.Pi, scale)
+    lazy val tlCorner = point.scaleAndRotate(center, +0.25 * math.Pi, scale)
+    lazy val trCorner = point.scaleAndRotate(center, -0.25 * math.Pi, scale)
+    lazy val brCorner = point.scaleAndRotate(center, -0.75 * math.Pi, scale)
+    lazy val blCorner = point.scaleAndRotate(center, +0.75 * math.Pi, scale)
   }
 
   @JSExport
@@ -101,8 +101,8 @@ object PE {
     draw()
 
     def draw(): Unit = {
-      println("rotate(XY(0,0), XY(0,5), (3.0/4) * math.Pi, 1)=" + scaleAndRotate(XY(0, 0), XY(0, 5), (3.0 / 4) * math.Pi, 1))
-      println("rotate(XY(-3,20), XY(7,12), (3.0/4) * math.Pi, 1)=" + scaleAndRotate(XY(-3, 20), XY(7, 12), (3.0 / 4) * math.Pi, 1))
+      println("rotate(XY(0,0), XY(0,5), (3.0/4) * math.Pi, 1)=" + XY(0, 5).scaleAndRotate(XY(0, 0), (3.0 / 4) * math.Pi, 1))
+      println("rotate(XY(-3,20), XY(7,12), (3.0/4) * math.Pi, 1)=" + XY(7, 12).scaleAndRotate(XY(-3, 20), (3.0 / 4) * math.Pi, 1))
 
       val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
       val state = State(XY(0.0, 0.0), XY(0.0, 0.5))
