@@ -23,7 +23,17 @@ object Wip {
 @JSExport("PE")
 object PE {
 
-  case class XY(x: Double, y: Double)
+  case class XY(x: Double, y: Double) {
+    def t(o: XY) = XY(x + o.x, y + o.y)
+
+    def s(scale: Double) = XY(x * scale, y * scale)
+
+    def r(θ: Double) = {
+      val cosθ = math.cos(θ)
+      val sinθ = math.sin(θ)
+      XY(cosθ * x - sinθ * y, sinθ * x + cosθ * y)
+    }
+  }
 
   case class Boundary(bl: XY, tr: XY)
 
@@ -33,30 +43,12 @@ object PE {
     math.sqrt(x + y)
   }
 
-  def scaleAndRotate(center: XY, point: XY, θ: Double, scale: Double): XY = {
-    // translate center to the origin
-    val x0 = point.x - center.x
-    val y0 = point.y - center.y
-
-    // scale
-    val x1 = x0 * scale
-    val y1 = y0 * scale
-
-    // rotate by angle θ counterclockwise
-    val cosθ = math.cos(θ)
-    val sinθ = math.sin(θ)
-    val x2 = cosθ * x1 - sinθ * y1
-    val y2 = cosθ * x1 + cosθ * y1
-
-    // translate back to center
-    val x3 = x2 + center.x
-    val y3 = y2 + center.y
-
-    // TODO using builder pattern
-    // XY(0, 5).t(XY(-0, -0)).s(scale).r(θ).t(XY(0, 0))
-
-    XY(x3, y3)
-  }
+  def scaleAndRotate(center: XY, point: XY, θ: Double, scale: Double): XY =
+    point
+      .t(center.s(-1))
+      .s(scale)
+      .r(θ)
+      .t(center)
 
   case class State(center: XY, point: XY) {
     lazy val innerRadius: Double = distance(center, point)
