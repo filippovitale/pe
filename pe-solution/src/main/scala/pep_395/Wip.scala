@@ -43,6 +43,7 @@ object PE {
     val δx = point.x - center.x
     val δy = point.y - center.y
 
+    // rotation by angle θ counterclockwise
     val x = cosθ * δx - sinθ * δy + center.x
     val y = cosθ * δx + cosθ * δy + center.y
 
