@@ -12,10 +12,14 @@ class RotationSpec extends Specification with DataTables {
       XY(0, 0) ! XY(0, 5) ! -0.25 * math.Pi ! XY(+5, +5) |
       XY(0, 0) ! XY(0, 5) ! -0.75 * math.Pi ! XY(+5, -5) |
       XY(0, 0) ! XY(0, 5) ! +0.75 * math.Pi ! XY(-5, -5) |
-      XY(0, 0) ! XY(0, 5) ! +0.25 * math.Pi ! XY(-5, +5) |> {
+      XY(0, 0) ! XY(0, 5) ! +0.25 * math.Pi ! XY(-5, +5) |
+      XY(1, 1) ! XY(1, 6) ! -0.25 * math.Pi ! XY(+6, +6) |
+      XY(1, 1) ! XY(1, 6) ! -0.75 * math.Pi ! XY(+6, -6) |
+      XY(1, 1) ! XY(1, 6) ! +0.75 * math.Pi ! XY(-6, -6) |
+      XY(1, 1) ! XY(1, 6) ! +0.25 * math.Pi ! XY(-6, +6) |> {
       (center, point, θ, result) =>
         val calc = PE.scaleAndRotate(center, point, θ, math.sqrt(2))
-        calc.x must beCloseTo(result.x, 5.significantFigures)
-        calc.y must beCloseTo(result.y, 5.significantFigures)
+        calc.x must beCloseTo(result.x, 2.significantFigures)
+        calc.y must beCloseTo(result.y, 2.significantFigures)
     }
 }

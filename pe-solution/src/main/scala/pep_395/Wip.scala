@@ -16,6 +16,7 @@ object Wip {
     println(startingPoint)
     println(startingPoint.innerRadius)
     println(startingPoint.outerRadius)
+    ???
   }
 }
 
