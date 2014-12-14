@@ -33,15 +33,15 @@ object PE {
       val sinθ = math.sin(θ)
       XY(cosθ * x - sinθ * y, sinθ * x + cosθ * y)
     }
+
+    def distance(p2: XY): Double = {
+      val a2 = math.pow(x - p2.x, 2)
+      val b2 = math.pow(y - p2.y, 2)
+      math.sqrt(a2 + b2)
+    }
   }
 
   case class Boundary(bl: XY, tr: XY)
-
-  def distance(p1: XY, p2: XY): Double = {
-    val x = math.pow(p1.x - p2.x, 2)
-    val y = math.pow(p1.y - p2.y, 2)
-    math.sqrt(x + y)
-  }
 
   def scaleAndRotate(center: XY, point: XY, θ: Double, scale: Double): XY =
     point
@@ -51,13 +51,14 @@ object PE {
       .t(center)
 
   case class State(center: XY, point: XY) {
-    lazy val innerRadius: Double = distance(center, point)
-    lazy val outerRadius: Double = innerRadius * math.sqrt(2)
+    lazy val scale = math.sqrt(2)
+    lazy val innerRadius: Double = point.distance(center)
+    lazy val outerRadius: Double = innerRadius * scale
 
-    //    lazy val tlCorner = rotate(center, point, ??? * math.Pi, math.sqrt(2))
-    lazy val trCorner = scaleAndRotate(center, point, -0.25 * math.Pi, math.sqrt(2))
-    lazy val blCorner = scaleAndRotate(center, point, 0.25 * math.Pi, math.sqrt(2))
-    //    lazy val brCorner = rotate(center, point, ??? * math.Pi, math.sqrt(2))
+    lazy val tlCorner = scaleAndRotate(center, point, +0.25 * math.Pi, scale)
+    lazy val trCorner = scaleAndRotate(center, point, -0.25 * math.Pi, scale)
+    lazy val brCorner = scaleAndRotate(center, point, -0.75 * math.Pi, scale)
+    lazy val blCorner = scaleAndRotate(center, point, +0.75 * math.Pi, scale)
   }
 
   @JSExport
@@ -87,10 +88,10 @@ object PE {
 
     def drawState(unit: Double)(state: State): Unit = {
       dom.console.info(s"state.trCorner=${state.trCorner}")
-      //      drawPoint(unit)(state.tlCorner)
+      drawPoint(unit)(state.tlCorner)
       drawPoint(unit)(state.trCorner)
       drawPoint(unit)(state.blCorner)
-      //      drawPoint(unit)(state.brCorner)
+      drawPoint(unit)(state.brCorner)
     }
 
     def drawPoint(unit: Double)(p: XY): Unit = ctx.fillRect(p.x * unit, p.y * unit, 2, 2)
