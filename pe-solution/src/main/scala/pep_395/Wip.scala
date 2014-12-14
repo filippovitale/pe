@@ -33,22 +33,29 @@ object PE {
     math.sqrt(x + y)
   }
 
-  def rotate(center: XY, point: XY, θ: Double, scale: Double): XY = {
-    // (x, y)-->(0.6 x+0.8 y-0.2, -0.8 x+0.6 y+0.6)
-    // RotationTransform[-ArcCos[3/5], {0.5, 0.5}][{x, y}]
+  def scaleAndRotate(center: XY, point: XY, θ: Double, scale: Double): XY = {
+    // translate center to the origin
+    val x0 = point.x - center.x
+    val y0 = point.y - center.y
 
+    // scale
+    val x1 = x0 * scale
+    val y1 = y0 * scale
+
+    // rotate by angle θ counterclockwise
     val cosθ = math.cos(θ)
     val sinθ = math.sin(θ)
+    val x2 = cosθ * x1 - sinθ * y1
+    val y2 = cosθ * x1 + cosθ * y1
 
-    val δx = point.x - center.x
-    val δy = point.y - center.y
+    // translate back to center
+    val x3 = x2 + center.x
+    val y3 = y2 + center.y
 
-    // rotation by angle θ counterclockwise
-    val x = cosθ * δx - sinθ * δy + center.x
-    val y = cosθ * δx + cosθ * δy + center.y
+    // TODO using builder pattern
+    // XY(0, 5).t(XY(-0, -0)).s(scale).r(θ).t(XY(0, 0))
 
-    // TODO w/matrix --> Translate(-C.x, -C.y) * Scale(sqrt(2)) * Rotate(???°) * Translate(C.x, C.y)
-    XY(x * scale, x * scale)
+    XY(x3, y3)
   }
 
   case class State(center: XY, point: XY) {
@@ -56,8 +63,8 @@ object PE {
     lazy val outerRadius: Double = innerRadius * math.sqrt(2)
 
     //    lazy val tlCorner = rotate(center, point, ??? * math.Pi, math.sqrt(2))
-    lazy val trCorner = rotate(center, point, -0.25 * math.Pi, math.sqrt(2))
-    lazy val blCorner = rotate(center, point, 0.25 * math.Pi, math.sqrt(2))
+    lazy val trCorner = scaleAndRotate(center, point, -0.25 * math.Pi, math.sqrt(2))
+    lazy val blCorner = scaleAndRotate(center, point, 0.25 * math.Pi, math.sqrt(2))
     //    lazy val brCorner = rotate(center, point, ??? * math.Pi, math.sqrt(2))
   }
 
@@ -100,8 +107,8 @@ object PE {
     draw()
 
     def draw(): Unit = {
-      println("rotate(XY(0,0), XY(0,5), (3.0/4) * math.Pi, 1)=" + rotate(XY(0,0), XY(0,5), (3.0/4) * math.Pi, 1))
-      println("rotate(XY(-3,20), XY(7,12), (3.0/4) * math.Pi, 1)=" + rotate(XY(-3,20), XY(7,12), (3.0/4) * math.Pi, 1))
+      println("rotate(XY(0,0), XY(0,5), (3.0/4) * math.Pi, 1)=" + scaleAndRotate(XY(0, 0), XY(0, 5), (3.0 / 4) * math.Pi, 1))
+      println("rotate(XY(-3,20), XY(7,12), (3.0/4) * math.Pi, 1)=" + scaleAndRotate(XY(-3, 20), XY(7, 12), (3.0 / 4) * math.Pi, 1))
 
       val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
       val state = State(XY(0.0, 0.0), XY(0.0, 0.5))

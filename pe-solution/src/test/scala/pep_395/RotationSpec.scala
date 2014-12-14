@@ -9,13 +9,16 @@ class RotationSpec extends Specification with DataTables {
 
   def e1 =
     "center" | "point" | "θ" | "result" |
-      XY(0, 0) ! XY(0, 5) ! (-1.0 / 4.0) * math.Pi ! XY(5, 5) |
-      XY(0, 0) ! XY(0, 5) ! (-3.0 / 4.0) * math.Pi ! XY(5, -5) |
-      XY(0, 0) ! XY(0, 5) ! (3.0 / 4.0) * math.Pi ! XY(-5, -5) |
-      XY(0, 0) ! XY(0, 5) ! (1.0 / 4.0) * math.Pi ! XY(-5, 5) |> {
+      XY(0, 0) ! XY(0, 5) ! -1.0 * deg45 ! XY(5, 5) |
+      XY(0, 0) ! XY(0, 5) ! -1.0 * (deg45 + deg90) ! XY(5, -5) |
+      XY(0, 0) ! XY(0, 5) ! deg45 + deg90 ! XY(-5, -5) |
+      XY(0, 0) ! XY(0, 5) ! deg45 ! XY(-5, 5) |> {
       (center, point, θ, result) =>
-        val calc = PE.rotate(center, point, θ, math.sqrt(2))
-        calc.x must be_==~(result.x)
-        calc.y must be_==~(result.y)
+        val calc = PE.scaleAndRotate(center, point, θ, math.sqrt(2))
+        calc.x must beCloseTo(result.x, 5.significantFigures)
+        calc.y must beCloseTo(result.y, 5.significantFigures)
     }
+
+  val deg45: Double = (1.0 / 4.0) * math.Pi
+  val deg90: Double = (1.0 / 2.0) * math.Pi
 }
