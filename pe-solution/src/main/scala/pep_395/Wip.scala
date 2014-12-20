@@ -25,6 +25,8 @@ object Wip {
 object PE {
 
   case class XY(x: Double, y: Double) {
+    val ε = 0.0000000001
+
     def t(o: XY) = XY(x + o.x, y + o.y)
 
     def s(scale: Double) = XY(x * scale, y * scale)
@@ -47,6 +49,12 @@ object PE {
         .s(scale)
         .r(θ)
         .t(center)
+
+    override def equals(other: Any) = other match {
+      case that: XY =>
+        (this.x - that.x).abs < ε && (this.y - that.y).abs < ε
+      case _ => false
+    }
   }
 
   case class Boundary(bl: XY, tr: XY)

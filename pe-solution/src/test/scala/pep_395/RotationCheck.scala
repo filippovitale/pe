@@ -14,26 +14,11 @@ class RotationCheck extends Specification with ScalaCheck {
   } yield XY(x, y)
 
   def is =
-    "distance between point always >= 0" ! ex1 ^
-      "360° rotation, comes back to the same spot" ! ex2 ^
-      "360° rotation with any center, comes back to the same spot" ! ex3 ^
+    "distance between point always >= 0" !
+      Prop.forAll(anyXY, anyXY) { (a: XY, b: XY) => a.distance(b) must be_>=(0.0)} ^
+      "360° rotation, comes back to the same spot" !
+        Prop.forAll(anyXY) { (p: XY) => p must_== p.r(2 * math.Pi)} ^
+      "360° rotation with any center, comes back to the same spot" !
+        Prop.forAll(anyXY, anyXY) { (p: XY, c: XY) => p must_== p.scaleAndRotate(c, 2 * math.Pi, 1)} ^
       end
-
-
-  def ex1 = Prop.forAll(anyXY, anyXY) { (a: XY, b: XY) => a.distance(b) must be_>=(0.0)}
-
-  def ex2 = Prop.forAll(anyXY) { (p: XY) =>
-    val pr = p.r(2 * math.Pi)
-    math.abs(p.x - pr.x) must be_<(ε)
-    math.abs(p.y - pr.y) must be_<(ε)
-  }
-
-  def ex3 = Prop.forAll(anyXY, anyXY) { (p: XY, c: XY) =>
-    val pr = p.scaleAndRotate(c, 2 * math.Pi, 1)
-    math.abs(p.x - pr.x) must be_<(ε)
-    math.abs(p.y - pr.y) must be_<(ε)
-  }
 }
-
-// prop { (a: String, b: String) => (a + b).startsWith(a)} ^
-// check { (a: String, b: String) => (a + b).startsWith(a)} ^
