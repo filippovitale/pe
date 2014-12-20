@@ -10,7 +10,7 @@ object Wip {
   import pep_395.PE._
 
   val startingBoundries = XY(0, 0)
-  val startingPoint = State(XY(0, 0), XY(0, 0.5))
+  val startingPoint = StateCP(XY(0, 0), XY(0, 0.5))
 
   def solve(): Unit = {
     println(startingPoint)
@@ -59,7 +59,7 @@ object PE {
 
   case class Boundary(bl: XY, tr: XY)
 
-  case class State(center: XY, point: XY) {
+  case class StateCP(center: XY, point: XY) {
     lazy val scale = math.sqrt(2)
     lazy val innerRadius: Double = point.distance(center)
     lazy val outerRadius: Double = innerRadius * scale
@@ -68,6 +68,11 @@ object PE {
     lazy val trCorner = point.scaleAndRotate(center, -0.25 * math.Pi, scale)
     lazy val brCorner = point.scaleAndRotate(center, -0.75 * math.Pi, scale)
     lazy val blCorner = point.scaleAndRotate(center, +0.75 * math.Pi, scale)
+  }
+
+  case class StateB(bl: XY, br: XY) {
+    val tl = br.scaleAndRotate(bl, +0.5 * math.Pi, 1)
+    val tr = bl.scaleAndRotate(br, -0.5 * math.Pi, 1)
   }
 
   @JSExport
@@ -97,12 +102,12 @@ object PE {
       unit
     }
 
-    def drawPoint(unit: Double)(p: XY): Unit = {
-      ctx.fillStyle = "black"
+    def drawPoint(unit: Double)(p: XY, fillStyle: String = "black"): Unit = {
+      ctx.fillStyle = fillStyle
       ctx.fillRect(p.x * unit - 2, p.y * unit - 2, 4, 4)
     }
 
-    def drawState(unit: Double)(state: State, fillStyle: String = "dark gray"): Unit = {
+    def drawStateCP(unit: Double)(state: StateCP, fillStyle: String = "dark gray"): Unit = {
       ctx.fillStyle = fillStyle
       ctx.beginPath()
       ctx.moveTo(state.tlCorner.x * unit, state.tlCorner.y * unit)
@@ -116,15 +121,25 @@ object PE {
       drawPoint(unit)(state.point)
     }
 
-    def draw(): Unit = {
-      println("rotate(XY(0,0), XY(0,5), (3.0/4) * math.Pi, 1)=" + XY(0, 5).scaleAndRotate(XY(0, 0), (3.0 / 4) * math.Pi, 1))
-      println("rotate(XY(-3,20), XY(7,12), (3.0/4) * math.Pi, 1)=" + XY(7, 12).scaleAndRotate(XY(-3, 20), (3.0 / 4) * math.Pi, 1))
+    def drawStateB(unit: Double)(state: StateB, fillStyle: String = "dark gray"): Unit = {
+      ctx.fillStyle = fillStyle
+      ctx.beginPath()
+      ctx.moveTo(state.tl.x * unit, state.tl.y * unit)
+      ctx.lineTo(state.tr.x * unit, state.tr.y * unit)
+      ctx.lineTo(state.br.x * unit, state.br.y * unit)
+      ctx.lineTo(state.bl.x * unit, state.bl.y * unit)
+      ctx.closePath()
+      if (fillStyle == "dark gray") ctx.stroke() else ctx.fill()
 
+      drawPoint(unit)(state.bl, "blue")
+      drawPoint(unit)(state.br, "red")
+    }
+
+    def draw(): Unit = {
       val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
-      val state = State(XY(0.0, 0.0), XY(0.0, 0.5))
-      val state2 = State(XY(-3.0, 0.0), XY(-5.0, 1.0))
-      drawState(unit)(state, "green")
-      drawState(unit)(state2)
+      drawStateCP(unit)(StateCP(XY(0.0, 0.0), XY(0.0, 0.5)), "blue")
+      // drawStateCP(unit)(StateCP(XY(-3.0, 0.0), XY(-5.0, 1.0)))
+      drawStateB(unit)(StateB(XY(-0.5, -0.5), XY(+0.5, -0.5)), "green")
     }
 
     dom.window.addEventListener("resize", { _: Event => draw()}, useCapture = false)
