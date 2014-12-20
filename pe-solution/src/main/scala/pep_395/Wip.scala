@@ -102,15 +102,15 @@ object PE {
       ctx.fillRect(p.x * unit - 2, p.y * unit - 2, 4, 4)
     }
 
-    def drawState(unit: Double)(state: State): Unit = {
-      ctx.fillStyle = "green"
+    def drawState(unit: Double)(state: State, fillStyle: String = "dark gray"): Unit = {
+      ctx.fillStyle = fillStyle
       ctx.beginPath()
       ctx.moveTo(state.tlCorner.x * unit, state.tlCorner.y * unit)
       ctx.lineTo(state.trCorner.x * unit, state.trCorner.y * unit)
       ctx.lineTo(state.brCorner.x * unit, state.brCorner.y * unit)
       ctx.lineTo(state.blCorner.x * unit, state.blCorner.y * unit)
       ctx.closePath()
-      ctx.fill()
+      if (fillStyle == "dark gray") ctx.stroke() else ctx.fill()
 
       drawPoint(unit)(state.center)
       drawPoint(unit)(state.point)
@@ -123,8 +123,8 @@ object PE {
       val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
       val state = State(XY(0.0, 0.0), XY(0.0, 0.5))
       val state2 = State(XY(-3.0, 0.0), XY(-5.0, 1.0))
-      drawState(unit)(state)
-      //      drawState(unit)(state2)
+      drawState(unit)(state, "green")
+      drawState(unit)(state2)
     }
 
     dom.window.addEventListener("resize", { _: Event => draw()}, useCapture = false)
