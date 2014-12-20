@@ -91,22 +91,30 @@ object PE {
       ctx.fillRect(-1 * leftOffset, -0.25, w, 0.5)
       ctx.fillRect(-0.25, -1 + topOffset, 0.5, -h)
 
+      ctx.globalAlpha = 0.3
+
       val unit = Seq(leftOffset, topOffset).min / 7.0
       unit
     }
 
-    def drawState(unit: Double)(state: State): Unit = {
-      dom.console.info(s"state.trCorner=${state.trCorner}")
-      drawPoint(unit)(state.tlCorner)
-      drawPoint(unit)(state.trCorner)
-      drawPoint(unit)(state.blCorner)
-      drawPoint(unit)(state.brCorner)
+    def drawPoint(unit: Double)(p: XY): Unit = {
+      ctx.fillStyle = "black"
+      ctx.fillRect(p.x * unit - 2, p.y * unit - 2, 4, 4)
     }
 
-    def drawPoint(unit: Double)(p: XY): Unit = ctx.fillRect(p.x * unit, p.y * unit, 2, 2)
+    def drawState(unit: Double)(state: State): Unit = {
+      ctx.fillStyle = "green"
+      ctx.beginPath()
+      ctx.moveTo(state.tlCorner.x * unit, state.tlCorner.y * unit)
+      ctx.lineTo(state.trCorner.x * unit, state.trCorner.y * unit)
+      ctx.lineTo(state.brCorner.x * unit, state.brCorner.y * unit)
+      ctx.lineTo(state.blCorner.x * unit, state.blCorner.y * unit)
+      ctx.closePath()
+      ctx.fill()
 
-    dom.window.addEventListener("resize", { _: Event => draw()}, useCapture = false)
-    draw()
+      drawPoint(unit)(state.center)
+      drawPoint(unit)(state.point)
+    }
 
     def draw(): Unit = {
       println("rotate(XY(0,0), XY(0,5), (3.0/4) * math.Pi, 1)=" + XY(0, 5).scaleAndRotate(XY(0, 0), (3.0 / 4) * math.Pi, 1))
@@ -114,8 +122,13 @@ object PE {
 
       val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
       val state = State(XY(0.0, 0.0), XY(0.0, 0.5))
+      val state2 = State(XY(-3.0, 0.0), XY(-5.0, 1.0))
       drawState(unit)(state)
+      //      drawState(unit)(state2)
     }
+
+    dom.window.addEventListener("resize", { _: Event => draw()}, useCapture = false)
+    draw()
 
   }
 }
