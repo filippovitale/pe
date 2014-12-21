@@ -43,7 +43,7 @@ object PE {
       math.sqrt(a2 + b2)
     }
 
-    def scaleAndRotate(center: XY, θ: Double, scale: Double): XY =
+    def scaleAndRotate(center: XY, θ: Double, scale: Double = 1): XY =
       this
         .t(center.s(-1))
         .s(scale)
@@ -71,8 +71,26 @@ object PE {
   }
 
   case class StateB(bl: XY, br: XY) {
-    val tl = br.scaleAndRotate(bl, +0.5 * math.Pi, 1)
-    val tr = bl.scaleAndRotate(br, -0.5 * math.Pi, 1)
+
+    import Constant._
+
+    val tl = br.scaleAndRotate(bl, θtl)
+    val tr = bl.scaleAndRotate(br, θtr)
+
+    def nextLeft: StateB = StateB(tl, tr.scaleAndRotate(tl, θl, sl))
+
+    def nextRight: StateB = StateB(tl.scaleAndRotate(tr, θr, sr), tr)
+  }
+
+  object Constant {
+    val θtl = +0.5 * math.Pi
+    val θtr = -0.5 * math.Pi
+
+    val sl = 4.0 / 5.0
+    val sr = 3.0 / 5.0
+
+    val θl = math.acos(sl)
+    val θr = -1 * math.acos(sr)
   }
 
   @JSExport
@@ -137,9 +155,17 @@ object PE {
 
     def draw(): Unit = {
       val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
-      drawStateCP(unit)(StateCP(XY(0.0, 0.0), XY(0.0, 0.5)), "blue")
-      // drawStateCP(unit)(StateCP(XY(-3.0, 0.0), XY(-5.0, 1.0)))
-      drawStateB(unit)(StateB(XY(-0.5, -0.5), XY(+0.5, -0.5)), "green")
+
+      val seed = StateB(XY(-0.5, -0.5), XY(+0.5, -0.5))
+      drawStateB(unit)(seed, "green")
+
+      def drawNext(s: StateB): StateB = {
+        val next = s.nextLeft
+        drawStateB(unit)(next, "blue")
+        next
+      }
+
+      (seed /: (1 to 10))((s, _) => drawNext(s))
     }
 
     dom.window.addEventListener("resize", { _: Event => draw()}, useCapture = false)
