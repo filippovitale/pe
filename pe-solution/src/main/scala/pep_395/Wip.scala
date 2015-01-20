@@ -10,12 +10,10 @@ object Wip {
   import pep_395.PE._
 
   val startingBoundries = XY(0, 0)
-  val startingPoint = StateCP(XY(0, 0), XY(0, 0.5))
+  val startingPoint = State(XY(0, 0), XY(0, 1))
 
   def solve(): Unit = {
     println(startingPoint)
-    println(startingPoint.innerRadius)
-    println(startingPoint.outerRadius)
     ???
   }
 }
@@ -59,29 +57,6 @@ object PE {
 
   case class Boundary(bl: XY, tr: XY)
 
-  case class StateCP(center: XY, point: XY) {
-    lazy val scale = math.sqrt(2)
-    lazy val innerRadius: Double = point.distance(center)
-    lazy val outerRadius: Double = innerRadius * scale
-
-    lazy val tlCorner = point.scaleAndRotate(center, +0.25 * math.Pi, scale)
-    lazy val trCorner = point.scaleAndRotate(center, -0.25 * math.Pi, scale)
-    lazy val brCorner = point.scaleAndRotate(center, -0.75 * math.Pi, scale)
-    lazy val blCorner = point.scaleAndRotate(center, +0.75 * math.Pi, scale)
-  }
-
-  case class StateB(bl: XY, br: XY) {
-
-    import Constant._
-
-    val tl = br.scaleAndRotate(bl, θtl)
-    val tr = bl.scaleAndRotate(br, θtr)
-
-    def nextLeft: StateB = StateB(tl, tr.scaleAndRotate(tl, θl, sl))
-
-    def nextRight: StateB = StateB(tl.scaleAndRotate(tr, θr, sr), tr)
-  }
-
   object Constant {
     val θtl = +0.5 * math.Pi
     val θtr = -0.5 * math.Pi
@@ -91,6 +66,18 @@ object PE {
 
     val θl = math.acos(sl)
     val θr = -1 * math.acos(sr)
+  }
+
+  case class State(bl: XY, br: XY) {
+
+    import Constant._
+
+    val tl = br.scaleAndRotate(bl, θtl)
+    val tr = bl.scaleAndRotate(br, θtr)
+
+    def nextLeft: State = State(tl, tr.scaleAndRotate(tl, θl, sl))
+
+    def nextRight: State = State(tl.scaleAndRotate(tr, θr, sr), tr)
   }
 
   @JSExport
@@ -125,21 +112,7 @@ object PE {
       ctx.fillRect(p.x * unit - 2, p.y * unit - 2, 4, 4)
     }
 
-    def drawStateCP(unit: Double)(state: StateCP, fillStyle: String = "dark gray"): Unit = {
-      ctx.fillStyle = fillStyle
-      ctx.beginPath()
-      ctx.moveTo(state.tlCorner.x * unit, state.tlCorner.y * unit)
-      ctx.lineTo(state.trCorner.x * unit, state.trCorner.y * unit)
-      ctx.lineTo(state.brCorner.x * unit, state.brCorner.y * unit)
-      ctx.lineTo(state.blCorner.x * unit, state.blCorner.y * unit)
-      ctx.closePath()
-      if (fillStyle == "dark gray") ctx.stroke() else ctx.fill()
-
-      drawPoint(unit)(state.center)
-      drawPoint(unit)(state.point)
-    }
-
-    def drawStateB(unit: Double)(state: StateB, fillStyle: String = "dark gray"): Unit = {
+    def drawStateB(unit: Double)(state: State, fillStyle: String = "dark gray"): Unit = {
       ctx.fillStyle = fillStyle
       ctx.beginPath()
       ctx.moveTo(state.tl.x * unit, state.tl.y * unit)
@@ -156,10 +129,10 @@ object PE {
     def draw(): Unit = {
       val unit = setup(dom.window.innerWidth, dom.window.innerHeight)
 
-      val seed = StateB(XY(-0.5, -0.5), XY(+0.5, -0.5))
+      val seed = State(XY(-0.5, -0.5), XY(+0.5, -0.5))
       drawStateB(unit)(seed, "green")
 
-      def drawNext(s: StateB): StateB = {
+      def drawNext(s: State): State = {
         val next = s.nextLeft
         drawStateB(unit)(next, "blue")
         next
@@ -173,3 +146,17 @@ object PE {
 
   }
 }
+/*
+
+  X grab the best from the queue
+  X calculate longest radius or another heuristic
+
+  - initial state:
+    - currentBoundaries = Boundary(0,0,0,0)
+    - availableStates = State(XY(0, 0), XY(1, 0))
+  - calculate "promising boundaries" using actual boundaries ∀ state ∈ Set(available states)
+  - pull the most promising boundaries instance
+  - calculate corner points and eventually update boundaries
+  - add next 2 states to the availableStates
+
+ */
