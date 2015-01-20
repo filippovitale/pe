@@ -9,12 +9,11 @@ object Wip {
 
   import pep_395.PE._
 
-  val startingBoundries = XY(0, 0)
-  val startingPoint = State(XY(0, 0), XY(0, 1))
-
   def solve(): Unit = {
-    println(startingPoint)
-    ???
+    var currentBoundaries = Boundary(XY(0, 0), XY(0, 0))
+    var availableStates = Set(State(XY(0, 0), XY(0, 1)))
+
+    // TODO implement naive solver
   }
 }
 
@@ -22,7 +21,10 @@ object Wip {
 @JSExport("PE")
 object PE {
 
-  case class XY(x: Double, y: Double) {
+  type X = Double
+  type Y = Double
+
+  case class XY(x: X, y: Y) {
     val ε = 0.0000000001
 
     def t(o: XY) = XY(x + o.x, y + o.y)
@@ -146,14 +148,17 @@ object PE {
 
   }
 }
+
 /*
 
   X grab the best from the queue
   X calculate longest radius or another heuristic
 
-  - initial state:
-    - currentBoundaries = Boundary(0,0,0,0)
-    - availableStates = State(XY(0, 0), XY(1, 0))
+  - fix rotation tests
+
+  V initial state:
+    V currentBoundaries = Boundary(0,0,0,0)
+    V availableStates = State(XY(0, 0), XY(1, 0))
   - calculate "promising boundaries" using actual boundaries ∀ state ∈ Set(available states)
   - pull the most promising boundaries instance
   - calculate corner points and eventually update boundaries
