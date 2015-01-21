@@ -13,10 +13,23 @@ object Wip {
     var currentBoundaries = Boundary(XY(0, 0), XY(0, 0))
     var availableStates = Set(State(XY(0, 0), XY(0, 1)))
 
+    val mostPromisingState = availableStates maxBy (Heuristic.diagonalDistance(_, currentBoundaries))
+
     // TODO implement naive solver
+    /*
+      - fix rotation tests
+
+      V initial state:
+        V currentBoundaries = Boundary(0,0,0,0)
+        V availableStates = State(XY(0, 0), XY(1, 0))
+      - calculate "promising boundaries" using actual boundaries ∀ state ∈ Set(available states)
+        X calculate longest radius or another heuristic
+      - pick the most promising boundaries instance
+      - calculate corner points and eventually update boundaries
+      - add next 2 states to the availableStates
+    */
   }
 }
-
 
 @JSExport("PE")
 object PE {
@@ -80,6 +93,28 @@ object PE {
     def nextLeft: State = State(tl, tr.scaleAndRotate(tl, θl, sl))
 
     def nextRight: State = State(tl.scaleAndRotate(tr, θr, sr), tr)
+
+    def unit: Double = bl distance br
+  }
+
+  object Heuristic {
+    
+    type BoundaryIncrease = Double
+
+    def diagonalDistance(state: State, currentBoundaries: Boundary): BoundaryIncrease = {
+      val currentDiagonal = currentBoundaries.bl.distance(currentBoundaries.tr)
+
+      val maxRadius = state.unit * currentDiagonal
+
+      import PE.Constant._
+      val farestPossiblePoint = state.bl.scaleAndRotate(state.br, θtl, maxRadius)
+
+      Vector(
+        farestPossiblePoint.x - currentBoundaries.tr.x,
+        farestPossiblePoint.y - currentBoundaries.tr.y,
+        currentBoundaries.bl.x - farestPossiblePoint.x,
+        currentBoundaries.bl.y - farestPossiblePoint.y).max
+    }
   }
 
   @JSExport
@@ -148,20 +183,3 @@ object PE {
 
   }
 }
-
-/*
-
-  X grab the best from the queue
-  X calculate longest radius or another heuristic
-
-  - fix rotation tests
-
-  V initial state:
-    V currentBoundaries = Boundary(0,0,0,0)
-    V availableStates = State(XY(0, 0), XY(1, 0))
-  - calculate "promising boundaries" using actual boundaries ∀ state ∈ Set(available states)
-  - pull the most promising boundaries instance
-  - calculate corner points and eventually update boundaries
-  - add next 2 states to the availableStates
-
- */
