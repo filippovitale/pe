@@ -13,20 +13,36 @@ object Wip {
     var currentBoundaries = Boundary(XY(0, 0), XY(0, 0))
     var availableStates = Set(State(XY(0, 0), XY(0, 1)))
 
-    val mostPromisingState = availableStates maxBy (Heuristic.diagonalDistance(_, currentBoundaries))
+    println("PRE --> " + currentBoundaries)
+
+    val mostPromisingState = availableStates maxBy (Heuristic.usingDiagonalDistance(_, currentBoundaries))
+    availableStates -= mostPromisingState
+    println(s"mostPromisingState --> $mostPromisingState")
+
+    val nl = mostPromisingState.nextLeft
+    val nr = mostPromisingState.nextRight
+    availableStates +=(nl, nr)
+    println(s"availableStates --> $availableStates")
+
+    Set(
+      mostPromisingState.bl,
+      mostPromisingState.br,
+      mostPromisingState.tl,
+      mostPromisingState.tr
+    ) foreach (currentBoundaries += _)
+
+    println("POST --> " + currentBoundaries)
 
     // TODO implement naive solver
     /*
-      - fix rotation tests
-
       V initial state:
         V currentBoundaries = Boundary(0,0,0,0)
         V availableStates = State(XY(0, 0), XY(1, 0))
-      - calculate "promising boundaries" using actual boundaries ∀ state ∈ Set(available states)
-        X calculate longest radius or another heuristic
-      - pick the most promising boundaries instance
-      - calculate corner points and eventually update boundaries
-      - add next 2 states to the availableStates
+      V calculate "promising boundaries" using actual boundaries ∀ state ∈ Set(available states)
+      V pick the most promising boundaries instance
+      V calculate next left and right states and add to the available states
+      V calculate corner points
+      V eventually update boundaries
     */
   }
 }
@@ -70,7 +86,20 @@ object PE {
     }
   }
 
-  case class Boundary(bl: XY, tr: XY)
+  case class Boundary(bl: XY, tr: XY) {
+    def +=(p: XY): Boundary =
+      if (p.x > tr.x || p.y > tr.y) {
+        val x = Set(p.x, tr.x).max
+        val y = Set(p.y, tr.y).max
+        Boundary(bl, XY(x, y))
+      } else if (p.x < bl.x || p.y < bl.y) {
+        val x = Set(p.x, bl.x).min
+        val y = Set(p.y, bl.y).min
+        Boundary(XY(x, y), tr)
+      } else {
+        this
+      }
+  }
 
   object Constant {
     val θtl = +0.5 * math.Pi
@@ -98,22 +127,22 @@ object PE {
   }
 
   object Heuristic {
-    
+
     type BoundaryIncrease = Double
 
-    def diagonalDistance(state: State, currentBoundaries: Boundary): BoundaryIncrease = {
+    def usingDiagonalDistance(state: State, currentBoundaries: Boundary): BoundaryIncrease = {
       val currentDiagonal = currentBoundaries.bl.distance(currentBoundaries.tr)
 
       val maxRadius = state.unit * currentDiagonal
 
       import PE.Constant._
-      val farestPossiblePoint = state.bl.scaleAndRotate(state.br, θtl, maxRadius)
+      val promisingPoint = state.bl.scaleAndRotate(state.br, θtl, maxRadius)
 
       Vector(
-        farestPossiblePoint.x - currentBoundaries.tr.x,
-        farestPossiblePoint.y - currentBoundaries.tr.y,
-        currentBoundaries.bl.x - farestPossiblePoint.x,
-        currentBoundaries.bl.y - farestPossiblePoint.y).max
+        promisingPoint.x - currentBoundaries.tr.x,
+        promisingPoint.y - currentBoundaries.tr.y,
+        currentBoundaries.bl.x - promisingPoint.x,
+        currentBoundaries.bl.y - promisingPoint.y).max
     }
   }
 
