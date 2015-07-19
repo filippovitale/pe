@@ -1,10 +1,9 @@
 package pep_395
-
+/*
 import org.specs2.Specification
 import org.specs2.matcher.DataTables
 import pep_395.PE.XY
 
-// TODO fix the tests
 //class RotationSpec extends Specification with DataTables {
 //  def is = "adding integers should just work in scala" ! e1
 //
@@ -24,3 +23,5 @@ import pep_395.PE.XY
 //        calc.y must beCloseTo(result.y, 2.significantFigures)
 //    }
 //}
+*/
+

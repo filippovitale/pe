@@ -1,8 +1,8 @@
 package pep_054
+/*
+import org.specs2._
 
-import org.specs2.mutable._
-
-class ProblemExample extends Specification {
+class ProblemExampleSpec extends Specification {
 
   "Example games" should {
     "be won by player 1" in {
@@ -27,3 +27,4 @@ class CardSpec extends Specification {
   }
 
 }
+*/

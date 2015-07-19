@@ -1,6 +1,5 @@
 import sbt.Keys._
 import sbt._
-import sbtrelease.ReleasePlugin._
 
 object Settings {
 
@@ -13,19 +12,19 @@ object Settings {
     , "-language:implicitConversions"
     , "-unchecked"
     , "-Yno-adapted-args"
+    , "-Yrangepos"
     , "-Xmax-classfile-name", "240"
   )
 
   lazy val standardSettings =
     Defaults.coreDefaultSettings ++
-      releaseSettings ++ // sbt-release
       net.virtualvoid.sbt.graph.Plugin.graphSettings ++ // dependency plugin settings
       Seq[Def.Setting[_]](
         organization := "it.filippovitale"
         , homepage := Some(url("https://filippovitale.it/"))
         , licenses := Seq("MIT License" -> url("http://opensource.org/licenses/mit-license.php/"))
         , pomIncludeRepository := { (repo: MavenRepository) => false} // no repositories in the pom
-        , scalaVersion := "2.11.4"
+        , scalaVersion := "2.11.7"
         , autoScalaLibrary := false
         , scalacOptions ++= scalacFlags
         , resolvers ++= Seq(

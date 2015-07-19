@@ -1,11 +1,20 @@
 name := "pe"
 
-description := "Solutions and micro-libs I made while solving some interesting problems"
+description := "Solutions and micro helper lib I made while solving some interesting problems"
 
-libraryDependencies in ThisBuild ++= Seq(
-  "org.scalaz"                      %% "scalaz-core"      % "7.1.0",
-  "com.github.scala-blitz"          %% "scala-blitz"      % "1.1",
-  "org.specs2"                      %% "specs2"           % "2.4.11"  % "test",
-  "org.scalacheck"                  %% "scalacheck"       % "1.11.6"  % "test",
-  "com.storm-enroute"               %% "scalameter"       % "0.6"     % "test"
-)
+libraryDependencies ++= {
+  val scalazV = "7.1.3"
+  val scalaBlitzV = "1.1"
+  val specs2V = "3.6.2"
+  val scalacheckV = "1.12.4"
+  val scalameterV = "0.6"
+
+  Seq(
+    "org.scalaz" %% "scalaz-core" % scalazV,
+    "com.github.scala-blitz" %% "scala-blitz" % scalaBlitzV,
+    "org.specs2" %% "specs2-core" % specs2V % "test",
+    "org.specs2" %% "specs2-scalacheck" % specs2V % "test",
+    "org.scalacheck" %% "scalacheck" % scalacheckV % "test",
+    "com.storm-enroute" %% "scalameter" % scalameterV % "test"
+  )
+}

@@ -1,5 +1,5 @@
 package pep_395
-
+/*
 import org.scalacheck._
 import org.specs2._
 import pep_395.PE.XY
@@ -22,3 +22,4 @@ class RotationCheck extends Specification with ScalaCheck {
         Prop.forAll(anyXY, anyXY) { (p: XY, c: XY) => p must_== p.scaleAndRotate(c, 2 * math.Pi, 1)} ^
       end
 }
+*/
