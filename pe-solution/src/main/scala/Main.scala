@@ -1,7 +1,3 @@
-object Main {
-
-  def main(args: Array[String] = Array()) {
-    println(pep_395.Wip.solve())
-  }
-
+object Main extends App {
+  println(pep_096.Solution.solve())
 }

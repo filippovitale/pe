@@ -1,5 +1,5 @@
 package pep_395
-
+/*
 import org.scalajs.dom
 import pep_395.PE.XY
 
@@ -40,3 +40,4 @@ object Old {
   }
 
 }
+*/
