@@ -26,28 +26,29 @@ class WipSpec extends Specification {
       |18 384
       |19 489
       |20 626""".stripMargin
-//      |21 791
-//      |22 1001
-//      |23 1254
-//      |24 1574
-//      |25 1957
-//      |26 2435
-//      |27 3009
-//      |28 3717
-//      |29 4564
-//      |30 5603""".stripMargin
-      .split("\n").map(_.split(" ")(1)).toList.map(_.toInt)
+      //|21 791
+      //|22 1001
+      //|23 1254
+      //|24 1574
+      //|25 1957
+      //|26 2435
+      //|27 3009
+      //|28 3717
+      //|29 4564
+      //|30 5603""".stripMargin
+      .split("\n").map(_.split(" ")(1)).map(_.toInt).toIndexedSeq
 
-  "solve1" >> {
-    sampleResults ==== sampleResults.indices.map(Wip.solve1).map(_.size).toList
-  }.pendingUntilFixed
-
-  "solve2" >> {
-    sampleResults ==== sampleResults.indices.map(Wip.solve2).map(_.size).toList
+  "Solve1" >> {
+    // Solve1.count(35) takes 35s
+    sampleResults ==== sampleResults.indices.map(Wip.Solve1.count)
   }
 
-  "solve3" >> {
-    sampleResults ==== sampleResults.indices.map(Wip.solve3).map(_.size).toList
+  //  "Solve2" >> {
+  //    sampleResults ==== sampleResults.indices.map(Wip.Solve2.count)
+  //  }
+
+  "Solve3" >> {
+    sampleResults ==== sampleResults.indices.map(Wip.Solve3.count)
   }
 
 }

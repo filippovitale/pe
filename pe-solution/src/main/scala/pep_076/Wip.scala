@@ -1,37 +1,68 @@
 package pep_076
 
 import pep_050.Memo
+import Stream._
+import scala.collection.mutable
+import scalaz.syntax.id._
 
 object Wip {
 
-  type Way = List[Int] // in decreasing order
+  object Solve1 {
 
-  // (math.ceil(x / 2.0).toInt until x).map(i => List(i, x - i)).toSet
-  def aaa(x: Int): Set[Way] = for {
-    h <- (math.ceil(x / 2.0).toInt until x).toSet[Int]
-    l = x - h
-  } yield List(h, l)
+    type Way = List[Int] // in decreasing order
 
-  def bbb(xs: Way): Set[Way] = for {
-    i <- xs.indices.toSet[Int]
-    k <- fff(xs(i))
-  } yield xs.patch(i, k, 1).sorted.reverse
+    // (math.ceil(x / 2.0).toInt until x).map(i => List(i, x - i)).toSet
+    def pairSet(x: Int): Set[Way] = for {
+      h <- (math.ceil(x / 2.0).toInt until x).toSet[Int]
+      l = x - h
+    } yield List(h, l)
 
-  lazy val eee: Memo[Set[Way], Set[Way]] = Memo { case xs =>
-    val b = xs.flatMap(bbb) -- xs
-    xs ++ (if (b.nonEmpty) eee(b) else Set())
+    def solveOneLevel(xs: Way): Set[Way] = for {
+      i <- xs.indices.toSet[Int]
+      k <- solve(xs(i))
+    } yield xs.patch(i, k, 1).sorted.reverse
+
+    lazy val solveRecursively: Memo[Set[Way], Set[Way]] = Memo { case xs =>
+      val b = xs.flatMap(solveOneLevel) -- xs
+      xs ++ (if (b.nonEmpty) solveRecursively(b) else Set())
+    }
+
+    lazy val solve: Memo[Int, Set[Way]] = Memo { case x => solveRecursively(pairSet(x)) }
+
+    def show(ws: Set[Way]): List[String] =
+      ws.map(_.mkString(" + ")).toList.sorted.reverse
+
+    def count(x: Int): Int = solve(x).size
   }
 
-  lazy val fff: Memo[Int, Set[Way]] = Memo { case x => eee(aaa(x)) }
+  object Solve2 {
 
-  def show(ws: Set[Way]): List[String] =
-    ws.map(_.mkString(" + ")).toList.sorted.reverse
+    def combination(a: Int, b: Int): Int =
+      if (a == 1 || b == 1) 1
+      else (0 /: (0 until a / b + 1)) { case (acc, i) => acc + combination(a - b * i, b - 1) }
 
-  import scalaz._, Scalaz._
+    def count(x: Int): Int = combination(x, x - 1)
+  }
 
-  def solve1(x: Int): Set[Way] = aaa(x).flatMap(bbb) |> eee
+  object Solve3 {
+    val n = 100
+    val way = mutable.IndexedSeq.fill(n + 1)(1)
 
-  def solve2(x: Int): Set[Way] = aaa(x) |> eee
+    for {
+      i <- 2 to n
+      j <- i to n
+    } way(j) += way(j - i)
 
-  def solve3(x: Int): Set[Way] = fff(x)
+    def count(x: Int): Int = way(x) - 1
+  }
+
+  object Solve4 {
+
+    lazy val seq: Stream[Int] = 0 #:: 0 #:: seq map {
+      case n => n + 1 // TODO
+    }
+
+    def count(x: Int): Int = seq(x)
+  }
+
 }
