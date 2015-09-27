@@ -2,77 +2,131 @@ package pep_076
 
 object Solution {
 
-  def ways(n: Int): Seq[(Int, Int)] = {
-    for {
-      a <- 1 until n
-      b = n - a
-    } yield (a, b)
-  }
+  /*
+      It is possible to write five as a sum in exactly six different ways:
 
-  // Seq("aaa bbb", "ccc").flatMap(_.split("\\W+"))
-  // List(aaa, bbb, ccc)
+      4 + 1
+      3 + 2
+      3 + 1 + 1
+      2 + 2 + 1
+      2 + 1 + 1 + 1
+      1 + 1 + 1 + 1 + 1
 
-  // let's try with oedis for 1 -> 0, 2 -> 1, 3 -> 2, 4 -> 5, 5 -> 6
-  // http://oeis.org/A002133
+      How many different ways can one hundred be written as a sum of at least two positive integers?
+   */
+   /*
 
-  // sum(
-  //     sum(
-  //         x^(i+j) / [(1-x^i)(1-x^j)],
-  //         j=1..i-1
-  //     ), i=1..infinity)
+      2 : 1
+        1 + 1
 
-  def parts(n: Int): Seq[Seq[Int]] = {
-    val l1 = for {
-      a <- 1 until n
-      b = n - a
-    } yield Seq(a, b)
+      3 : 2 = 1 + 1
+        [2] + 1
+        (1 + 1) + 1
 
-    l1.map(l => (l, l.tail).zipped.forall(_ <= _))
-    //...
-    Seq()
-  }
+      4 : 4 = 1 + 2 + 1
+        [3] + 1
+        2 + 2
+        (2 + 1) + 1
+        (1 + 1 + 1) + 1
 
-  // http://oeis.org/A002620
-  //  (2*n^2-1+(-1)^(n))/8
-  //  x^2/((1-x)^2*(1-x^2))
-  //  a(n) = 2*a(n-1) - 2*a(n-3) + a(n-4)
-  //  a(n) = a(n-1) + a(n-2) - a(n-3) + 1 [with a(-1) = a(0) = a(1) = 0]
-  //  a(2k) = k^2, a(2k-1) = k(k-1).
+      5 : 6 = 1 + 4 + 1
+        [4] + 1
+        3 + 2
+        (3 + 1) + 1
+        (2 + 2) + 1
+        (2 + 1 + 1) + 1
+        (1 + 1 + 1 + 1) + 1
 
-  // a(2 * 50) = 50 * 50
+      6 : 9 = 1 + 6 + 2
+        [5] + 1
+        4 + 2
+        (4 + 1) + 1
+        3 + 3
+        (3 + 2) + 1
+        (3 + 1 + 1) + 1
+        (2 + 2 + 1) + 1
+        (2 + 1 + 1 + 1) + 1
+        (1 + 1 + 1 + 1 + 1) + 1
 
-  def wip1() = { // works for 1 to 2
-    val n = 5
+      7 : 12 = 1 + 9 + 2
+        [6] + 1
+        5 + 2
+        (5 + 1) + 1
+        4 + 3
+        (4 + 2) + 1
+        (4 + 1 + 1) + 1
+        (3 + 3) + 1
+        (3 + 2 + 1) + 1
+        (3 + 1 + 1 + 1) + 1
+        (2 + 2 + 1 + 1) + 1
+        (2 + 1 + 1 + 1 + 1) + 1
+        (1 + 1 + 1 + 1 + 1 + 1) + 1
 
-    val l = for {
-      a <- 1 until n
-      b = n - a
-    } yield Seq(a, b)
+      8 : ??? 16 = 1 + 12 + 3
+        [7] + 1
+        6 + 2
+        5 + 3
+        4 + 4
 
-    l.partition(_.head < 3)
-    // Seq(Vector(List(1, 4), List(2, 3)),Vector(List(3, 2), List(4, 1)))
+      9 : ??? 20 = 1 + 16 + 3
+        [8] + 1
+        7 + 2
+        6 + 3
+        5 + 4
 
-    l.flatMap(_.tail)
-    // Seq(Vector(List(1, 4), List(2, 3)),Vector(List(3, 2), List(4, 1)))
-  }
+      10 : ??? 25 = 1 + 20 + 4
+        [9] + 1
+        8 + 2
+        7 + 3
+        6 + 4
+        5 + 5
 
-  def wip2(n: Int) = {
-    val l = for {
-      b <- 1 until n
-      a = n - b
-    } yield Seq(a, b)
-    // l works for 1 to 2
+      11 : ??? 30 = 1 + 25 + 4
+        [10] + 1
+        9 + 2
+        8 + 3
+        7 + 4
+        6 + 5
 
-    // partition
-    l.partition(xs => xs.head < xs.last)
+      12 : ??? 36 = 1 + 30 + 5
+        [11] + 1
+       10 + 2
+        9 + 3
+        8 + 4
+        7 + 5
+        6 + 6
 
-    // TODO
+      13 : ??? 42 = 1 + 36 + 5
+        [12] + 1
+       11 + 2
+       10 + 3
+        9 + 4
+        8 + 5
+        7 + 6
 
-    // for every b > 1 recur
-    // eg (1,2) -> [(1,1,1)]
+      14 : ??? 49 = 1 + 42 + 6
+        [13] + 1
+         12 + 2
+         11 + 3
+         10 + 4
+          9 + 5
+          8 + 6
+          7 + 7
 
-    // better than (filter not monotonic List) is
+      15 : ??? 56 = 1 + 49 + 6
+        [14] + 1
+         13 + 2
+         12 + 3
+         11 + 4
+         10 + 5
+          9 + 6
+          8 + 7
 
-    //.flatMap(_.tail)
-  }
+1,2,4,6,9,12,16,20,25,30,36,42,49,56
+   */
+
+
+
+  def solve(): String = "TODO"
+
 }

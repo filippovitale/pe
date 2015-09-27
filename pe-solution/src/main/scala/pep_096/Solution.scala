@@ -53,8 +53,7 @@ object Sudoku {
     // @ (0 |-> n - 1).map(aaa)
     // res38: List[Int] = List(0, 3, 6, 27, 30, 33, 54, 57, 60) // <-- first column
 
-    def groups(b: Board): Groups =
-      (0 |-> n - 1).map(o => ???)
+    def groups(b: Board): Groups = ??? // (0 |-> n - 1).map(o => ???)
 
     //   Vector(
     //   Set(b(0),  b(1),  b(2),  b(9),  b(10), b(11), b(18), b(19), b(20)) - unassignedVal,
