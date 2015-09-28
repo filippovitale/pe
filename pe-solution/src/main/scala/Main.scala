@@ -1,3 +1,3 @@
 object Main extends App {
-  println(pep_076.Solution.solve())
+  println(pep_077.Solution.solve())
 }
