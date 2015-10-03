@@ -11,11 +11,12 @@ object Solution {
 
   def solve(): String = {
 
-    def aaa(i: Int, k: Int) = input.map(_(i)).groupBy(identity).map { case (a, b) => a -> b.size * k }
+    def charFrequency(position: Int, scale: Int): Map[Char, Int] =
+      input.map(_(position)).groupBy(identity).map { case (a, b) => a -> b.size * scale }
 
-    val a = aaa(0, -1)
-    val b = aaa(1, 0)
-    val c = aaa(2, 1)
+    val a = charFrequency(0, -1)
+    val b = charFrequency(1, 0)
+    val c = charFrequency(2, 1)
 
     val first = (a.keySet -- b.keySet -- c.keySet).toList
     val body = List(a, b, c).suml.toList.sortBy(_._2).map(_._1)

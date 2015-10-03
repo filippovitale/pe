@@ -1,3 +1,6 @@
 object Main extends App {
-  println(pep_079.Solution.solve())
+  val begin = System.nanoTime()
+  val solution = pep_080.Solution.solve()
+  val ms = (System.nanoTime() - begin) / 1000 / 1000
+  println(s"$solution – ${ms}ms")
 }
