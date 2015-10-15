@@ -31,7 +31,8 @@ trait Modules {
         javacOptions in run ++= Seq(
           "-encoding", "UTF-8",
           "-XX:+UnlockCommercialFeatures", "-XX:+FlightRecorder",
-          "-XX:FlightRecorderOptions=samplethreads=true"))
+          "-XX:FlightRecorderOptions=samplethreads=true",
+          "-Djava.library.path=/opt/aparapi-1.0.0"))
     )//.settings(scalaJSSettings: _*)
      //.settings(workbenchSettings: _*)
      //.settings(buildSettings: _*)
