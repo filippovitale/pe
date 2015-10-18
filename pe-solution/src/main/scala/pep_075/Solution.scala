@@ -31,7 +31,10 @@ object GCD {
   }
 }
 
+
 object Solution {
+
+  import GCD.gcd
 
   def isPerimiterOfOnlyOneRightAngleTriangle(p: Int): Boolean = {
     var (t, k, overflow) = (0, 0, false)
@@ -44,7 +47,7 @@ object Solution {
           k = m + 2
         }
         while (!overflow && (k < 2 * m && k <= p / (2 * m))) {
-          if (p / (2 * m) % k == 0 && GCD.gcd(k, m) == 1) {
+          if (p / (2 * m) % k == 0 && gcd(k, m) == 1) {
             t += 1
             overflow = t == 2
           }
