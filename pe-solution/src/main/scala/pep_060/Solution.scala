@@ -1,13 +1,13 @@
 package pep_060
 
 import common.Memo
-import common.Prime.isPrime
+import common.{IntOps, LongOps}
 
 object Solution {
-  val primes = (2 to 10000) filter (isPrime(_))
+  val primes = (2 to 10000) filter IntOps.isPrime
 
   lazy val areConcatenationsPrime: Memo[(Int, Int), Boolean] = Memo {
-    case (p1, p2) => Seq((p1, p2), (p2, p1)).map(t => s"${t._1}${t._2}").map(_.toLong).forall(isPrime)
+    case (p1, p2) => Seq((p1, p2), (p2, p1)).map(t => s"${t._1}${t._2}").map(_.toLong).forall(LongOps.isPrime)
   }
 
   def solve() = {

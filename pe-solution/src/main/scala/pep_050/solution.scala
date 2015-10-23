@@ -1,12 +1,12 @@
 package pep_050
 
-import common.Memo
-import common.Prime.isPrime
+import common.{IntOps, LongOps}
+import scalaz.Memo
 
 object solution {
-  val primes = (2 until 10000).filter(isPrime(_)).to[Array]
+  val primes = (2 until 10000).filter(IntOps.isPrime).to[Array]
 
-  lazy val sumDP: Memo[(Int, Int), Long] = Memo {
+  val sumDP: ((Int, Int)) => Long = Memo.mutableHashMapMemo {
     case (d, 1) => primes(d)
     case (d, t) => primes(d) + sumDP((d + 1, t - 1))
   }
@@ -19,7 +19,7 @@ object solution {
   } filter {
     case (_, s: Long) => s < 1000000
   } filter {
-    case (_, s: Long) => isPrime(s)
+    case (_, s: Long) => LongOps.isPrime(s)
   } sortBy {
     case (t, _) => t
   }).last // (t, s)

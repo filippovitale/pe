@@ -1,11 +1,10 @@
 package pep_077
 
-import common.Memo
-import common.Prime.isPrime
+import common.{IntOps, Memo}
 
 object Wip {
 
-  val primes = (2 to 10000) filter (isPrime(_))
+  val primes = (2 to 10000) filter IntOps.isPrime
 
   object Solve1 {
 

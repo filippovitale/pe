@@ -7,12 +7,12 @@ object Solution {
   val MAX = 50000000
 
   val ppts = for {
-    a <- Prime.stream takeWhile (_ <= (MAX - (2 * 2 * 2 + 2 * 2 * 2 * 2)).sqrt())
+    a <- Prime.intStream takeWhile (_ <= (MAX - (2 * 2 * 2 + 2 * 2 * 2 * 2)).sqrt())
     x = a.toLong * a
-    b <- Prime.stream takeWhile (_ <= (MAX - (2 * 2 + 2 * 2 * 2 * 2)).sqrt())
+    b <- Prime.intStream takeWhile (_ <= (MAX - (2 * 2 + 2 * 2 * 2 * 2)).sqrt())
     y = b.toLong * b * b
     if x + y < MAX
-    c <- Prime.stream takeWhile (_ <= (MAX - (2 * 2 + 2 * 2 * 2)).sqrt())
+    c <- Prime.intStream takeWhile (_ <= (MAX - (2 * 2 + 2 * 2 * 2)).sqrt())
     z = c.toLong * c * c * c
     xyz = x + y + z
     if xyz < MAX

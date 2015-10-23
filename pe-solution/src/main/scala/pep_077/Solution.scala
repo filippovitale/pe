@@ -1,11 +1,11 @@
 package pep_077
 
 import common.Memo
-import common.Prime.isPrime
+import common.IntOps
 
 object Solution {
 
-  val primes = (2 to 10000) filter (isPrime(_))
+  val primes = (2 to 10000) filter IntOps.isPrime
 
   lazy val count: Memo[(Int, Int), Int] = Memo { case (leftover: Int, limit: Int) =>
     if (leftover == 0) 1
