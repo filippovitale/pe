@@ -1,6 +1,6 @@
 package pep_091
 
-import pep_075.GCD
+import common.GCD.gcd
 
 object Wip {
 
@@ -13,7 +13,7 @@ object Wip {
       qx <- 1 to MAX
       qy <- 1 to MAX
       if (px, py) != ((qx, qy))
-      if (false) // TODO
+      if false // TODO
     } yield (px, py, qx, qy)
 
     def solve() = solutions.size + 3 * MAX * MAX
@@ -26,7 +26,7 @@ object Wip {
     val candidates = for {
       p <- 1 to MAX
       q <- 1 to MAX
-      g = GCD.gcd(p, q)
+      g = gcd(p, q)
       pp = q * g
       qq = (MAX - p) * g
     } yield (pp / p, qq / q)

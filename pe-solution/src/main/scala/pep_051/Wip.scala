@@ -1,9 +1,11 @@
 package pep_051
 
+import common.Prime
+
 object Wip {
 
-  //  val primes2digit = PrimesSeq(2).map(_.toString).to[Set]
-  //  val primes5digit = PrimesSeq(5).map(_.toString).to[Set]
+  //  val primes2digit = PrimeSeq(2).map(_.toString).to[Set]
+  //  val primes5digit = PrimeSeq(5).map(_.toString).to[Set]
 
   //  val maps = for {
   //    i <- 0 to 1
@@ -14,7 +16,7 @@ object Wip {
   //    case (c, s) => s
   //  }).sortBy(_.length).last.head
 
-  for {m <- for {i <- 0 to 1} yield pep_051.PrimesSeq(2).map(_.toString).groupBy(_(i))} yield m
+  for {m <- for {i <- 0 to 1} yield Prime.withNumberOfDigits(2).map(_.toString).groupBy(_(i))} yield m
 
   //  def gb(s: String): String = {
   //    s(0) :: s(1) :: s(2) :: s(3) :: s(4)
@@ -179,7 +181,7 @@ object Wip {
 
   val maps3 = for {
     p <- patterns3
-    aaa <- pep_051.PrimesSeq(6).map(_.toString).groupBy(p._1)
+    aaa <- Prime.withNumberOfDigits(6).map(_.toString).groupBy(p._1)
     bbb = aaa._2
     ccc = bbb.groupBy(p._2).count {
       case (d, _) => d._1 == d._2 && d._2 == d._3
@@ -191,7 +193,7 @@ object Wip {
 
   // ------------------------------
 
-  val primes6digit = pep_051.PrimesSeq(6).map(_.toString)
+  val primes6digit = Prime.withNumberOfDigits(6).map(_.toString)
 
   val patterns4 = for {
     a <- 0 to 4

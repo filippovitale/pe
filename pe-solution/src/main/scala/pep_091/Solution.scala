@@ -1,6 +1,6 @@
 package pep_091
 
-import pep_075.GCD.gcd
+import common.GCD.gcd
 
 object Solution {
   val MAX = 50

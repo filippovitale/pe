@@ -1,23 +1,10 @@
 package pep_050
 
-import scala.collection.mutable
-import scala.collection.immutable.IndexedSeq
-
-case class Memo[A, B](f: A => B) extends (A => B) {
-  private val cache = mutable.Map.empty[A, B]
-
-  def apply(x: A) = cache getOrElseUpdate(x, f(x))
-}
-
-object PrimesSeq {
-  def apply(maxPrime: Int) = 2 until maxPrime filter (isPrime(_))
-
-  def isPrime(n: Long): Boolean = BigInt(n).isProbablePrime(5)
-}
+import common.Memo
+import common.Prime.isPrime
 
 object solution {
-
-  val primes = PrimesSeq(10000).to[Array]
+  val primes = (2 until 10000).filter(isPrime(_)).to[Array]
 
   lazy val sumDP: Memo[(Int, Int), Long] = Memo {
     case (d, 1) => primes(d)
@@ -32,15 +19,15 @@ object solution {
   } filter {
     case (_, s: Long) => s < 1000000
   } filter {
-    case (_, s: Long) => PrimesSeq.isPrime(s)
+    case (_, s: Long) => isPrime(s)
   } sortBy {
     case (t, _) => t
   }).last // (t, s)
 
   def solve(): String = {
     val dt: IndexedSeq[(Int, Int)] = for {
-      d <- 0 until primes.size
-      r <- d + 1 to primes.size
+      d <- primes.indices
+      r <- d + 1 to primes.length
       t = r - d
     } yield (d, t)
 

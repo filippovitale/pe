@@ -1,6 +1,6 @@
 package pep_074
 
-import pep_050.Memo
+import common.Memo
 import scala.collection.mutable
 
 object Wip {

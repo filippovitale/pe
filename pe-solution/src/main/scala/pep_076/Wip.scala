@@ -1,9 +1,8 @@
 package pep_076
 
-import pep_050.Memo
+import common.Memo
 import Stream._
 import scala.collection.mutable
-import scalaz.syntax.id._
 
 object Wip {
 
