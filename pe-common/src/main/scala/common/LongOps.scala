@@ -1,6 +1,11 @@
 package common
 
 object LongOps {
+
+  def streamFrom(n: Long): Stream[Long] = n #:: streamFrom(n + 1)
+
+  def iteratorFrom(n: Long): Iterator[Long] = streamFrom(n).toIterator
+
   //from pep-010
   def isPrime(n: Long): Boolean = BigInt(n) isProbablePrime 5
 

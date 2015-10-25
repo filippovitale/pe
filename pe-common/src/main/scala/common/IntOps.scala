@@ -1,6 +1,11 @@
 package common
 
 object IntOps {
+
+  def streamFrom(n: Int): Stream[Int] = Stream from n
+
+  def iteratorFrom(n: Int): Iterator[Int] = Iterator from n
+
   //from pep-010
   def isPrime(n: Int): Boolean = BigInt(n) isProbablePrime 5
 
