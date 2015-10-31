@@ -6,6 +6,14 @@ object LongOps {
 
   def iteratorFrom(n: Long): Iterator[Long] = streamFrom(n).toIterator
 
+  def streamSequence1(ab: Long, f: Long => Long): Stream[Long] = ab match {
+    case a => a #:: streamSequence1(f(a), f)
+  }
+
+  def streamSequence2(ab: (Long, Long), fg: ((Long, Long) => Long, (Long, Long) => Long)): Stream[(Long, Long)] = ab match {
+    case (a, b) => (a, b) #:: streamSequence2((fg._1(a, b), fg._2(a, b)), fg)
+  }
+
   //from pep-010
   def isPrime(n: Long): Boolean = BigInt(n) isProbablePrime 5
 
