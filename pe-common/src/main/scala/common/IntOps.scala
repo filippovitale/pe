@@ -6,9 +6,7 @@ object IntOps {
 
   def iteratorFrom(n: Int): Iterator[Int] = Iterator from n
 
-  def streamSequence1(ab: Int, f: Int => Int): Stream[Int] = ab match {
-    case a => a #:: streamSequence1(f(a), f)
-  }
+  def streamSequence1(a: Int, f: Int => Int): Stream[Int] = a #:: streamSequence1(f(a), f)
 
   def streamSequence2(ab: (Int, Int), fg: ((Int, Int) => Int, (Int, Int) => Int)): Stream[(Int, Int)] = ab match {
     case (a, b) => (a, b) #:: streamSequence2((fg._1(a, b), fg._2(a, b)), fg)
