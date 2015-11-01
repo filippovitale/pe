@@ -15,6 +15,8 @@ object IntOps {
   //from pep-010
   def isPrime(n: Int): Boolean = BigInt(n) isProbablePrime 5
 
+  def primeStreamFrom(n: Int): Stream[Int] = streamFrom(n).filter(isPrime)
+
   //from pep-021
   def isPowerOf2(n: Int): Boolean = (n > 0) && (n & (n - 1)) == 0
 

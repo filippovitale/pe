@@ -17,6 +17,8 @@ object LongOps {
   //from pep-010
   def isPrime(n: Long): Boolean = BigInt(n) isProbablePrime 5
 
+  def primeStreamFrom(n: Long): Stream[Long] = streamFrom(n).filter(isPrime)
+
   //from pep-021
   def isPowerOf2(n: Long): Boolean = (n > 0) && (n & (n - 1)) == 0
 
