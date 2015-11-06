@@ -13,9 +13,17 @@ object IntOps {
   }
 
   //from pep-010
-  def isPrime(n: Int): Boolean = BigInt(n) isProbablePrime 5
+  def isPrime(n: Int, c: Int): Boolean = BigInt(n) isProbablePrime c
 
-  def primeStreamFrom(n: Int): Stream[Int] = streamFrom(n).filter(isPrime)
+  def isPrime(n: Int): Boolean = BigInt(n) isProbablePrime 10
+
+  val isPrimeMemo: Int => Boolean = scalaz.Memo.mutableHashMapMemo(isPrime)
+
+  def primeStreamFrom(n: Int): Stream[Int] = primeStreamFrom(n, 10)
+
+  def primeStreamFrom(n: Int, c: Int): Stream[Int] = streamFrom(n).filter(i => isPrime(i, c))
+
+  def primeSet(min: Int, max: Int, c: Int): Set[Int] = primeStreamFrom(min, c).takeWhile(_ <= max).toSet
 
   //from pep-021
   def isPowerOf2(n: Int): Boolean = (n > 0) && (n & (n - 1)) == 0

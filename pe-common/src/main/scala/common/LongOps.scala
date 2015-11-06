@@ -15,7 +15,11 @@ object LongOps {
   }
 
   //from pep-010
-  def isPrime(n: Long): Boolean = BigInt(n) isProbablePrime 5
+  def isPrime(n: Long, c: Int): Boolean = BigInt(n) isProbablePrime c
+
+  def isPrime(n: Long): Boolean = BigInt(n) isProbablePrime 10
+
+  val isPrimeMemo: Long => Boolean = scalaz.Memo.mutableHashMapMemo(isPrime)
 
   def primeStreamFrom(n: Long): Stream[Long] = streamFrom(n).filter(isPrime)
 
