@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Problem Euler 395</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Problem Euler 395</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body style="margin: 0px">
 
 <div>
-    <canvas style="display: block" id="canvas" width="640" height="480" />
+    <canvas style="display: block" id="canvas" width="640" height="480"></canvas>
 </div>
 
-<!--http://localhost:12345/pe-solution/target/scala-2.11/classes/pep_395/index.html-->
-
 <script type="text/javascript" src="../../pe-solution-fastopt.js"></script>
-<script type="text/javascript" src="/workbench.js"></script>
 <script>
-    PE().main(document.getElementById('canvas'));
+    var c = document.getElementById('canvas');
+    pep_395.Attempt1().main(c);
 </script>
 </body>
 </html>

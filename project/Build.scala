@@ -1,3 +1,5 @@
+import org.scalajs.sbtplugin.ScalaJSPlugin
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbtassembly.AssemblyPlugin.autoImport._
 
 object Build extends sbt.Build {
@@ -80,6 +82,8 @@ object Build extends sbt.Build {
         "-XX:FlightRecorderOptions=samplethreads=true",
         "-Djava.library.path=/opt/aparapi-1.0.0"))
   ).dependsOn(common)
+    .enablePlugins(ScalaJSPlugin)
+    .settings(libraryDependencies ++= Seq("org.scala-js" %%% "scalajs-dom" % "0.8.0"))
 
   lazy val all =
     Project(id = "all",

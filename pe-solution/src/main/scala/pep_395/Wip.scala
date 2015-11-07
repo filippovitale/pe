@@ -1,4 +1,18 @@
 package pep_395
+
+import scala.scalajs.js.JSApp
+
+object Wip {
+
+}
+
+object Attempt1 extends JSApp {
+  def main(): Unit = {
+    println("Hello world!")
+  }
+}
+
+
 /*
 import org.scalajs.dom
 import org.scalajs.dom.Event
