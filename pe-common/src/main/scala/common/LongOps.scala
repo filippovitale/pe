@@ -38,4 +38,7 @@ object LongOps {
     val s = properDivisorsSum(n)
     s != n && properDivisorsSum(s) == n
   }
+
+  // reverse order
+  def digits(n: Long) = Iterator.iterate(n)(_ / 10L).takeWhile(_ != 0L).map(_ % 10L)
 }

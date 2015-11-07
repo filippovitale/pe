@@ -40,4 +40,7 @@ object IntOps {
     val s = properDivisorsSum(n)
     s != n && properDivisorsSum(s) == n
   }
+
+  // reverse order
+  def digits(n: Int) = Iterator.iterate(n)(_ / 10).takeWhile(_ != 0).map(_ % 10)
 }
