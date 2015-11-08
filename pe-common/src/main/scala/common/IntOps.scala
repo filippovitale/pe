@@ -42,5 +42,9 @@ object IntOps {
   }
 
   // reverse order
-  def digits(n: Int) = Iterator.iterate(n)(_ / 10).takeWhile(_ != 0).map(_ % 10)
+  def reverseDigits(n: Int) = Iterator.iterate(n)(_ / 10).takeWhile(_ != 0).map(_ % 10)
+
+  def digits(n: Int, base: Int = 10) = Iterator.iterate(n)(_ / base).takeWhile(_ != 0L).map(_ % base)
+
+  def toHex(n: Int): String = digits(n, 16).map("0123456789ABCDEF".toVector.apply).toList.reverse.mkString
 }

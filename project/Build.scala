@@ -82,8 +82,7 @@ object Build extends sbt.Build {
         "-XX:FlightRecorderOptions=samplethreads=true",
         "-Djava.library.path=/opt/aparapi-1.0.0"))
   ).dependsOn(common)
-    .enablePlugins(ScalaJSPlugin)
-    .settings(libraryDependencies ++= Seq("org.scala-js" %%% "scalajs-dom" % "0.8.0"))
+    //.enablePlugins(ScalaJSPlugin).settings(libraryDependencies ++= Seq("org.scala-js" %%% "scalajs-dom" % "0.8.0"))
 
   lazy val all =
     Project(id = "all",

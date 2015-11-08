@@ -12,9 +12,9 @@ object Solution {
     else {
       val ds = ns.zip(rs).map { case (a, b) => a + b }
       val sum = (0 /: ds)(_ * 10 + _)
-      digits(sum).forall(_ % 2 == 1)
+      reverseDigits(sum).forall(_ % 2 == 1)
     }
   }
 
-  def solve() = iteratorFrom(1).take(MAX).filterNot(_ % 10 == 0).map(digits).count(isReversible)
+  def solve() = iteratorFrom(1).take(MAX).filterNot(_ % 10 == 0).map(reverseDigits).count(isReversible)
 }
