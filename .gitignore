@@ -10,3 +10,4 @@ pom.xml
 target/
 .DS_Store
 .venv/
+.ipynb_checkpoints
