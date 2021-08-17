@@ -1,8 +1,7 @@
-use crate::pep_001::pep_001::solve;
+use crate::pep_002::pep_002::solve;
 
-mod pep_001;
+mod pep_002;
 
 fn main() {
-    let pep_001_solution = solve();
-    println!("{}", pep_001_solution);
+    println!("{}", solve());
 }
