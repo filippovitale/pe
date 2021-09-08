@@ -1,18 +1,15 @@
-pub mod pep_243
-{
+pub mod pep_243 {
     use reikna::prime::prime_sieve;
-    use std::collections::BinaryHeap;
     use std::cmp::Reverse;
+    use std::collections::BinaryHeap;
 
-    pub fn solve() -> u64
-    {
+    pub fn solve() -> u64 {
         let factors = prime_sieve(100);
         let mut heap = BinaryHeap::new();
         heap.push(Reverse((2, 0, 1)));
 
         loop {
-            if let Some(Reverse((n, i, phi))) = heap.pop()
-            {
+            if let Some(Reverse((n, i, phi))) = heap.pop() {
                 let f0 = factors[i];
                 let f1 = factors[i + 1];
                 heap.push(Reverse((f0 * n, i, f0 * phi)));
