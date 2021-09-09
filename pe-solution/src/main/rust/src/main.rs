@@ -1,4 +1,4 @@
-use crate::pep_243::pep_243::solve;
+use crate::pep_243::solve;
 
 mod pep_243;
 
