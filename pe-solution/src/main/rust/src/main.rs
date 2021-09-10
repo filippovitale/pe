@@ -1,6 +1,6 @@
-use crate::pep_243::solve;
+use crate::pep_102::solve;
 
-mod pep_243;
+mod pep_102;
 
 fn main() {
     println!("{:?}", solve());
