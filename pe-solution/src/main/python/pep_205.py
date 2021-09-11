@@ -21,18 +21,13 @@ COLIN = Counter([a + b + c + d + e + f
 
 
 def solve():
-    total_peter_combinations = sum(PETER.values())
-    total_colin_combinations = sum(COLIN.values())
-
     total_probability = 0
     for p in PETER.keys():
-        prob = 0.0
-        weight = PETER.get(p) / total_peter_combinations
-        for c in COLIN.keys():
-            if p > c:
-                prob = prob + COLIN.get(c) / total_colin_combinations
-        total_probability = total_probability + (prob * weight)
+        probability = sum([c for n, c in COLIN.items() if p > n])
+        total_probability += probability * PETER.get(p)
 
+    total_probability /= sum(PETER.values())
+    total_probability /= sum(COLIN.values())
     return f"{total_probability:.7f}"
 
 
