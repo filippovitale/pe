@@ -9,3 +9,4 @@ I would like to publish some solutions and libraries I made while solving some i
  * CoffeScript / JavaScript
  * Go
  * Python
+ * Rust
