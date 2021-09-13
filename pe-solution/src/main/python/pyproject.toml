@@ -1,0 +1,40 @@
+[tool.black]
+line-length = 79
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+    | \.git
+    | \.mypy_cache
+    | \.pytest_cache
+    | dist
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+
+[tool.poetry]
+name = "pe"
+version = "1.0.0"
+description = "Project Euler solutions in multiple languages."
+authors = ["ASERT"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+cacheout = "*"
+typing_extensions = "*"
+
+[tool.poetry.dev-dependencies]
+black = { version = "*", allow-prereleases = true }
+ipykernel = "*"
+isort = "*"
+yala = { version = "*", allow-prereleases = true }
+pytest = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
