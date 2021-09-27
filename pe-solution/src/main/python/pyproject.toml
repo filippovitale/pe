@@ -34,6 +34,9 @@ ipykernel = "*"
 isort = "*"
 yala = { version = "*", allow-prereleases = true }
 pytest = "*"
+matplotlib = "*"
+pycairo = "*"
+PyGObject = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
