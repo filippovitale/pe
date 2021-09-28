@@ -23,6 +23,6 @@ def solve(eulercoins=None):
 
 if __name__ == "__main__":
     eulercoins = mine_eulercoin()
-    assert eulercoins[0] == 1504170715041707
+    assert eulercoins[0] == FIRST_EULERCOIN
     assert eulercoins[1] == 8912517754604
     print(solve(eulercoins))
