@@ -1,6 +1,5 @@
 package pep_095
 
-<<<<<<< Updated upstream
 import common.LongOps
 
 import scala.collection.mutable
@@ -70,10 +69,11 @@ object Wip {
       println(s"(len, n)=($len, $n)")
       n * -1
     }
-=======
+
+
 import scalaz.Memo
 
-object Wip {
+object Wip2 {
 
   val MAX = 1000000
 
@@ -153,7 +153,6 @@ object Wip {
     // TODO monoid peraphs?
 
     def solve() = (1 to MAX).map(IntOps.properDivisorsSum).head
->>>>>>> Stashed changes
   }
 
 }
