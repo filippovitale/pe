@@ -1,3 +1,4 @@
+from itertools import count
 from math import isqrt
 
 
@@ -48,7 +49,7 @@ def is_square(n: int) -> bool:
     if n % 13 in {2, 5, 6, 7, 8, 11}:
         return False
 
-        ## Other patterns
+    ## Other patterns
     if c == 5:  ## if it ends in a 5
         if (n // 10) % 10 != 2:
             return False  ## then it must end in 25
@@ -72,4 +73,48 @@ def is_square(n: int) -> bool:
         if x in A:
             return False
         A.add(x)
+    return True
+
+
+# https://stackoverflow.com/a/19391111/81444
+def prime_generator():
+    yield from [2, 3, 5, 7]
+    d = {}
+    pg = prime_generator()
+    next(pg)
+    p = next(pg)
+    assert p == 3
+    psq = p * p
+    for i in count(9, 2):
+        if i in d:  # composite
+            step = d.pop(i)
+        elif i < psq:  # prime
+            yield i
+            continue
+        else:  # composite, = p*p
+            assert i == psq
+            step = 2 * p
+            p = next(pg)
+            psq = p * p
+        i += step
+        while i in d:
+            i += step
+        d[i] = step
+
+
+# https://stackoverflow.com/a/1801446/81444
+def is_prime(n: int) -> bool:
+    """Returns True if n is prime."""
+    if n == 2 or n == 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+
+    i, w = 5, 2
+    while i * i <= n:
+        if n % i == 0:
+            return False
+
+        i += w
+        w = 6 - w
     return True

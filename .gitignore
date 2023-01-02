@@ -11,3 +11,4 @@ target/
 .DS_Store
 .venv/
 .ipynb_checkpoints
+__pycache__/
